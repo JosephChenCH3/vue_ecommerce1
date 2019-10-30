@@ -22,7 +22,7 @@
                 <div class="dropdown-cart-item h6 text-right" href="#">合計：{{ carts.total | currency }}元</div>
             </div>
             <div class="red-dots" v-if="cartsNum != 0">{{ cartsNum }}</div>
-            <button class="btn btn-sm btn-danger my-2 my-sm-0" v-if="cartsNum != 0" type="submit" @click="goToOrder">
+            <button class="btn btn-sm btn-danger my-sm-0" v-if="cartsNum != 0" type="submit" @click="goToOrder">
                 <i class="fas fa-dollar-sign"></i>結帳
             </button>
         </div>
@@ -65,6 +65,7 @@ export default {
             console.log("item",item)
             const newIndex = vm.cartArrayToLS.indexOf(item);
             vm.cartArrayToLS.splice(newIndex, 1);
+            vm.$bus.$emit('cartStatus:push', vm.cartArrayToLS);//*********
             localStorage.setItem("Cart", JSON.stringify(vm.cartArrayToLS));
             vm.$bus.$emit('message:push', `已移除 ${item.product.title} 商品`, 'success');
             vm.getCartFromLS();
@@ -91,8 +92,8 @@ export default {
                         localStorage.setItem("Cart", JSON.stringify(vm.cartArrayToLS));
                         vm.getCartFromLS();
                         vm.btnStatus = "";
-                        // vm.$router.push(`/`);
                         vm.$router.push(`/order/${timestamp}`);
+
                     }
                     vm.status.cartId = "";
                 });
@@ -183,14 +184,8 @@ export default {
 
 
 @media (max-width: 575.98px) {
-.red-dots {
-    top: 0px;
-    left: -8px;
-}
-
 .fix-btn-sm{
     height: 31px;
-    top: 8px;
 }
 
 

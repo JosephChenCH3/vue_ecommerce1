@@ -1,11 +1,11 @@
 <template>
     <div>
         <loading :active.sync="isLoading"></loading>
-        <div class="my-5 container col-6" v-if="carts.total == 0">
+        <div class="my-5 container col-lg-6" v-if="carts.total == 0">
             <div class="h5 text-danger">購物清單中無任何商品</div>
             <router-link to="/">返回首頁</router-link> 
         </div>
-        <div class="my-5 container col-6" v-if="carts.total != 0">
+        <div class="my-5 container col-lg-6" v-if="carts.total != 0">
             <div class="card border-0 shadow-sm">
                 <div class="pt-3" style="height: 25px; background-size: cover; background-position: center">
                     <h5 class="text-dark text-center">購物清單</h5>
@@ -75,7 +75,7 @@
                 </div>
             </div>
         </div>
-        <div class="my-5 container col-6" v-if="carts.total != 0">
+        <div class="my-5 container col-lg-6" v-if="carts.total != 0">
             <div class="card border-0 shadow-sm bg-light">
                 <div class="pt-3" style="height: 25px; background-size: cover; background-position: center">
                     <h5 class="text-dark text-center">訂購人資訊</h5>

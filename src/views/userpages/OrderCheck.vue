@@ -2,7 +2,7 @@
     <div>
     	<loading :active.sync="isLoading"></loading>
         <div class="my-5 row justify-content-center">
-            <form class="col-md-6" @submit.prevent="payOrder" v-if="order.products != null">
+            <form class="col-lg-6" @submit.prevent="payOrder" v-if="order.products != null">
                 <table class="table">
                     <thead>
                         <th>品名</th>

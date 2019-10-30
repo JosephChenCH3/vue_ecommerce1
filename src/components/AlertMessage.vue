@@ -62,7 +62,7 @@ export default {
 <style scope>
 .message-alert {
   position: fixed;
-  max-width: 50%;
+  min-width: 10%;
 /*  top: 56px;*/
   bottom: 10px;
   right: 20px;

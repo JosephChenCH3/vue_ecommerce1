@@ -26,10 +26,10 @@ Vue.use(Router)
 
 export default new Router({
   routes: [
-      {
-        path: '*',
-        redirect: '/'
-      },
+      // {
+      //   path: '*',
+      //   redirect: '/'
+      // },
       {
         path: '/login',
         name: 'Login',
@@ -92,6 +92,11 @@ export default new Router({
             name: 'Category',
             component: () => import('@/views/userpages/ProductCategory'),
           },
+          // {
+          //   path: 'category/:productCategory/:seriesName',
+          //   name: 'Series',
+          //   component: () => import('@/views/userpages/ProductCategory'),
+          // },
           {
             path: 'search/:searchStr',
             name: 'Search',

@@ -117,6 +117,7 @@ export default {
                 vm.cartArrayToLS.push(cart);
                 localStorage.setItem("Cart", JSON.stringify(vm.cartArrayToLS));
                 vm.$bus.$emit('getCartLS:push');
+                vm.$bus.$emit('cartStatus:push', vm.cartArrayToLS);//**********
                 vm.$bus.$emit('message:push', `已加入購物車`, 'success');
                 hadProduct = false;
                 vm.status.cartId = "";

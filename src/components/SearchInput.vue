@@ -58,9 +58,9 @@
     background-color: #FFF;
 }
 
-@media (max-width: 1250px) {
+@media (max-width: 1199.98px) {
 .input-width {
-    width: 100px;
+    /*width: 100px;*/
 }
 }
 

@@ -5,16 +5,12 @@
                 <router-link class="navbar-brand" to="/">
                         <img height="50" class="" src="@/assets/logo2.png" @click="btnStatus = '/main'">
                 </router-link>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" @click="navCollapseShadow">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <!-- <SearchInput class="hideobj-md showobj" @searchProductOut="searchProduct"></SearchInput> -->
-                <SearchInput class="hideobj-md showobj"></SearchInput>
-                <CartAndPay class="hideobj-md showobj"></CartAndPay>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">                
                     <ul class="navbar-nav mr-auto ml-3 justify-content-around">
                         <li class="nav-item px-3" @click="getCategoryToShow" :class="{'selected': btnStatus == 'women'}">
-                            <!-- <router-link class="nav-link h6" to="/women">WOMEN</router-link> -->
                             <router-link class="nav-link h6" to="/category/women">
                                 WOMEN
                             </router-link>
@@ -41,9 +37,8 @@
                         </li>
                     </ul>
                 </div>          
-                <!-- <SearchInput class="hideobj" @searchProductOut="searchProduct"></SearchInput> -->
-                <SearchInput class="hideobj"></SearchInput>
-                <CartAndPay class="hideobj"></CartAndPay>
+                <SearchInput class="set-position-si top35"></SearchInput>
+                <CartAndPay class="set-position-cp top35"></CartAndPay>
             </div>
         </nav>
     </div>
@@ -65,6 +60,8 @@ export default {
     data() {
         return {
             btnStatus: "",
+            navCollapseShadowStatus: false,
+            cartStatus: [],
         };
     },
     methods: {
@@ -78,32 +75,65 @@ export default {
             vm.btnStatus = `${str4}`;
             $('#navbarSupportedContent').collapse('hide');
             console.log("str4",str4)
+        },
+        navCollapseShadow() {
+            this.navCollapseShadowStatus = !this.navCollapseShadowStatus;
+            if(this.navCollapseShadowStatus) {
+                $(".navbar-collapse").addClass("shadow-sm");
+            } else {
+                $(".navbar-collapse").removeClass("shadow-sm");
+            }
+            
+        },
+        setPpositionSI() {
+            if (this.cartStatus.length != 0) {
+                $(".set-position-si").removeClass("right100");
+            } else {
+                $(".set-position-si").addClass("right100");
+            }
         }
     },
     computed: {
 
+    },
+    watch: {
+        cartStatus() {
+            this.setPpositionSI();
+        }
     },
     created() {
         const vm = this;
         const value = this.$router.history.current.path;
         this.btnStatus = value.split("/category/").join("");
         console.log("btnStatus",this.btnStatus)
+        this.cartStatus = JSON.parse(localStorage.getItem('Cart'));//
+        vm.$bus.$on('cartStatus:push', (data) => {
+             this.cartStatus = data;
+        });
         $(window).bind('scroll resize', function() {
             var $this = $(this);
             var $this_Top = $this.scrollTop();
             if ($this_Top > 150) {
                 // $('.navbar-scroll').stop().animate({ top: "0px" });
                 $(".navbar-scroll").addClass("navbar-addStyle");
+                $(".set-position-si").removeClass("top35");
+                $(".set-position-cp").removeClass("top35");
+                $(".set-position-si").addClass("top20");
+                $(".set-position-cp").addClass("top20");
             } else {
                 // $('.navbar-scroll').stop().animate({ top: "0px" });
                 $(".navbar-scroll").removeClass("navbar-addStyle");
+                $(".set-position-si").removeClass("top20");
+                $(".set-position-cp").removeClass("top20");
+                $(".set-position-si").addClass("top35");
+                $(".set-position-cp").addClass("top35");
             }
         }).scroll();
-        $('.carousel').carousel();
+        // $('.carousel').carousel();
     },
-    beforeDestroy () {
-
-    },
+    mounted() {
+        this.setPpositionSI();
+    }
 }
 </script>
 
@@ -158,6 +188,35 @@ export default {
 /*    border-bottom: 5px #FAD0D0 solid;*/
 }
 
+
+.set-position-si,.set-position-cp {
+    position: fixed;
+    -webkit-transition: all .5s ease-in-out;
+    -moz-transition: all .5s ease-in-out;
+    -o-transition: all .5s ease-in-out;
+    transition: all .5s ease-in-out;
+}
+
+.set-position-si {
+    left: calc(50% + 200px);
+}
+
+.set-position-cp {
+    left: calc(50% + 440px);
+}
+
+.top20 {
+    top: 20px;
+}
+
+.top35 {
+    top: 35px;
+}
+
+.right100 {
+    transform: translate(108px, 0)
+}
+
 .hideobj-md {
     display:none;
 }
@@ -173,9 +232,16 @@ export default {
     padding: 0;
 }
 
+.set-position-si {
+    left: calc(50% + 110px);
 }
 
-/*-----media max-width: 1199.98-----*/
+.set-position-cp {
+    left: calc(50% + 350px);
+}
+
+}
+
 
 /*-----media max-width: 991.98-----*/
 @media (max-width: 991.98px) {
@@ -196,6 +262,18 @@ export default {
     border-bottom: none;
 }
 
+.navbar-collapse {
+    padding-top: 40px;
+}
+
+.set-position-si {
+    left: calc(50% - 190px);
+}
+
+.set-position-cp {
+    left: calc(50% + 100px);
+}
+
 .hideobj {
     display:none;
 }
@@ -205,7 +283,6 @@ export default {
 }
 
 }
-/*-----media max-width: 991.98-----*/
 
 
 /*-----media min-width: 991.98-----*/
@@ -226,15 +303,32 @@ export default {
 }
 
 }
-/*-----media min-width: 991.98-----*/
+
+
+/*-----media max-width: 767.98-----*/
+@media (max-width: 767.98px) {
+.set-position-si {
+    left: calc(50% - 170px);
+}
+
+.set-position-cp {
+    left: calc(50% + 80px);
+}
+
+}
 
 
 /*-----media max-width: 575.98-----*/
 @media (max-width: 575.98px) {
+.set-position-si {
+    left: calc(50% - 130px);
+}
 
+.set-position-cp {
+    left: calc(50% + 50px);
+}
 
 }
-/*-----media max-width: 575.98-----*/
 
 
 /*-----media max-width: 499.98-----*/
@@ -243,9 +337,5 @@ export default {
     display: none;
 }
 
-
-
 }
-/*-----media max-width: 575.98-----*/
-
 </style>

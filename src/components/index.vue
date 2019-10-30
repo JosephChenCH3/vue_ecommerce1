@@ -92,7 +92,7 @@ export default {
     position: fixed;
     bottom: 0px;
     z-index: 15;
-/*    left: calc(50% - 630px);*/
+    left: calc(50% - 590px);
     -webkit-transition: all 1s ease-in-out;
     -moz-transition: all 1s ease-in-out;
     -o-transition: all 1s ease-in-out;
@@ -113,20 +113,20 @@ export default {
 }
 
 @-webkit-keyframes shake {
-    0% {left: calc(50% - 590px);} 
-    100% {left: calc(50% - 600px);}
+    0% {transform: translate(-10px, 0);}
+    100% {transform: translate(10px, 0);}
 }
 @-moz-keyframes shake {
-    0% {left: calc(50% - 590px);} 
-    100% {left: calc(50% - 600px);}
+    0% {transform: translate(-10px, 0);}
+    100% {transform: translate(10px, 0);}
 }
 @-o-keyframes shake {
-    0% {left: calc(50% - 590px);} 
-    100% {left: calc(50% - 600px);}
+    0% {transform: translate(-10px, 0);}
+    100% {transform: translate(10px, 0);}
 }
 @keyframes shake {
-    0% {left: calc(50% - 590px);} 
-    100% {left: calc(50% - 600px);}
+    0% {transform: translate(-10px, 0);}
+    100% {transform: translate(10px, 0);}
 }
 
 .coupon:hover>.btn_shake {
@@ -135,10 +135,6 @@ export default {
     -o-animation: none;
     animation: none;
 }
-
-
-
-
 
 .mousePointer {
     cursor: pointer;
@@ -150,22 +146,8 @@ export default {
     right: 15px;
 }
 
-
-@-webkit-keyframes shake {
-    0% {left: calc(50% - 490px);} 
-    100% {left: calc(50% - 500px);}
-}
-@-moz-keyframes shake {
-    0% {left: calc(50% - 490px);} 
-    100% {left: calc(50% - 500px);}
-}
-@-o-keyframes shake {
-    0% {left: calc(50% - 490px);} 
-    100% {left: calc(50% - 500px);}
-}
-@keyframes shake {
-    0% {left: calc(50% - 490px);} 
-    100% {left: calc(50% - 500px);}
+.coupon {
+    left: 15px;
 }
 
 

@@ -11,7 +11,7 @@
                     </div>
                     <ul class="nav flex-column collapse" :id="itemt.id" aria-labelledby="headingOne" data-parent="#sidebar">
                         <li class="nav-item col-lg-12 seriesStyle" v-for="(items,is) in getSeriesItem" :key="items.id">
-                            <a class="ml-3" href="#" @click="getSeries(items.series)" v-if="items.type == itemt.type">
+                            <a class="ml-3" href="#" @click.prevent="getSeries(items.series)" v-if="items.type == itemt.type">
                                 {{ items.series }}
                             </a>
                         </li>
@@ -21,10 +21,8 @@
                     <select class="custom-select" id="inputGroupSelect01">
                         <optgroup value="${itemt.id}-sm" v-for="(itemt,it) in getTypeItem" :key="`${itemt.id}-sm`">
                             <option disabled>{{ itemt.type }}</option>
-                            <option value="items" v-for="(items,is) in getSeriesItem" :key="`${items.id}-sm`" v-if="items.type == itemt.type">
-                                
+                            <option value="items" v-for="(items,is) in getSeriesItem" :key="`${items.id}-sm`" v-if="items.type == itemt.type">   
                                 <a href="#">{{ items.series }}</a>
-
                             </option>
                         </optgroup>
                     </select>
@@ -144,8 +142,9 @@ export default {
             this.productSeries.value = item;
             this.productShow.count = 4;
             this.productShow.status = true;
-            const value = this.productCategory.split("/category/").join("");  
+            const value = this.productCategory.split("/category/").join("");
             this.getProducts(value, item);
+            console.log("***",this.productCategory)
             console.log(value, item);
         },
         //Local Storage
@@ -189,6 +188,7 @@ export default {
                 vm.cartArrayToLS.push(cart);
                 localStorage.setItem("Cart", JSON.stringify(vm.cartArrayToLS));
                 vm.$bus.$emit('getCartLS:push');
+                vm.$bus.$emit('cartStatus:push', vm.cartArrayToLS);//**********
                 vm.$bus.$emit('message:push', `已加入購物車`, 'success');
                 hadProduct = false;
                 vm.status.cartId = "";
@@ -322,6 +322,10 @@ export default {
     padding: 0;
     height: 100%;
     top: 100px;
+    -webkit-transition: all .5s ease-in-out;
+    -moz-transition: all .5s ease-in-out;
+    -o-transition: all .5s ease-in-out;
+    transition: all .5s ease-in-out;
 }
 .nav-link {
     padding: 0 0 0 24px;
@@ -394,6 +398,11 @@ export default {
 @media (max-width: 1199.98px) {.image-rwd {height: 200px;}}
 @media (max-width: 991.98px) {.image-rwd {height: 320px;}}
 @media (max-width: 767.98px) {
+.sidebar-sticky {
+    top: 70px;
+    z-index: 5;
+}
+
 .image-rwd {
     height: 285px;
 }
