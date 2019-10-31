@@ -117,6 +117,9 @@ export default {
                 this.cartStatus = Number(this.cartStatus + data);
             }
         });
+        vm.$bus.$on('navbarItemSeleted', () => {
+            vm.btnStatus = "";
+        });
         $(window).bind('scroll resize', function() {
             var $this = $(this);
             var $this_Top = $this.scrollTop();

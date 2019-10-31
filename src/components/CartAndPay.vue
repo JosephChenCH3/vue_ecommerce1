@@ -87,6 +87,7 @@ export default {
                     if (vm.cartArrayToLS.length === count) {
                         vm.cartArrayToLS = [];
                         vm.$bus.$emit('cartStatus:push', "clear");//讓Search Input判斷是否位移
+                        vm.$bus.$emit('navbarItemSeleted');//清除Navbar Item seleted樣式
                         localStorage.setItem("Cart", JSON.stringify(vm.cartArrayToLS));
                         vm.getCartFromLS();
                         vm.btnStatus = "";
