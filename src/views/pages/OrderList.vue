@@ -1,20 +1,6 @@
 <template>
 	<div>
 		<loading :active.sync="isLoading"></loading>
-<!--         <div class="mt-3">
-            處理狀況：
-            <div class="d-inline">
-            <button type="button" class="btn btn-outline-primary btn-sm ml-1 my-1 mb-3" @click.prevent="processStatus = 'all'">
-                全部
-            </button>
-            <button type="button" class="btn btn-outline-primary btn-sm ml-1 my-1 mb-3" @click.prevent="processStatus = false">
-                未處理
-            </button>
-            <button type="button" class="btn btn-outline-primary btn-sm ml-1 my-1 mb-3" @click.prevent="processStatus = true">
-                已處理
-            </button>
-            </div>
-        </div> -->
         <table class="table mt4">
             <thead>
                 <td width="130" class="text-center">時間 / 時間</td>
@@ -152,8 +138,6 @@ export default {
 	data() {
 		return {
 			orderList: [],
-            // orderListOrginal: [],
-            // processStatus: "all",
 			pagenation: {},
 			isLoading: false,
 			editOrderList: {
@@ -188,7 +172,6 @@ export default {
                 console.log(response.data);
                 vm.isLoading = false;
                 vm.orderList = response.data.orders;
-                // vm.orderListOrginal = response.data.orders;
                 vm.pagenation = response.data.pagination;
             });
         },
@@ -210,19 +193,13 @@ export default {
             console.log(this.paidStatus);
             if( this.paidStatus ) {
                 if( !this.editOrderList.is_paid ) {
-                    // this.checkPaidDate = "";
                         this.editOrderList.paid_date = "";  
                     } else {
-                        // this.editOrderList.paid_date = this.checkPaidDate;
                         this.editOrderList.paid_date = Date.parse(new Date())/1000;
                     }
                 } else {
                     this.editOrderList.paid_date = this.checkPaidDate;
                 }
-                    // console.log(newDay2);
-                    // var newDay3 = (new Date(newDay2 * 1000)).toLocaleDateString('zh-TW')
-                    // var newDay4 = (new Date(newDay2 * 1000)).toLocaleTimeString('zh-TW')
-                    // console.log(newDay3, newDay4);
         },
         resetPaidStatus() {
             this.paidStatus = false;
@@ -234,27 +211,11 @@ export default {
             const vm = this;
             this.$http.put(api, {data: vm.editOrderList}).then((response) => {
                 console.log("updateOrderList", response.data);
-                // vm.editOrderList.paid_date = checkPaidDate;
                 $("#orderListModal").modal('hide');
                 this.getOrderList(vm.pagenation.current_page);
             });
         }
 	},
-    //computed: {
-    //     processFilter() {
-    //         const vm = this;
-    //         //vm.processStatus
-    //         vm.orderList = vm.orderListOrginal;
-    //         if (vm.processStatus == "all"){
-    //             return vm.orderList;
-    //         } else {
-    //             const newOrderList = vm.orderList.filter( (element) => { 
-    //                 return (element.is_process == vm.processStatus )
-    //             }); 
-    //             return newOrderList;
-    //         }    
-    //     }
-    //},
 	created() {
 		this.getOrderList();
 	}

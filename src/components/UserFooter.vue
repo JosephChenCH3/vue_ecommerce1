@@ -66,17 +66,8 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped src="../assets/css/UserFooter.css">
 
-.foot-item {
-    color: #212529;
-}
-.foot-item:hover {
-    text-decoration:none;
-}
-.router-link-active {
-    color: #4d3126;
-}
 
 </style>
 

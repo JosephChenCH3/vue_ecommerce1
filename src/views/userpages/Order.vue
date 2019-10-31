@@ -47,12 +47,6 @@
                             </tr>
                         </tbody>
                     </table>
-<!--                     <button class="btn btn-sm col-md-12 btn-lativbg" type="button" @click.prevent="openModalGetCouponCode">
-                        <i class="fas fa-spinner fa-pulse text-danger" v-if="status.loading == 'couponLoading'"></i>
-                        <i class="fas fa-gift text-danger"></i>
-                        <span class="text-danger">~好禮抽抽樂，最低75折~</span>
-                    </button> -->
-
                 <div class="form-group">
                     <div class="row col-12  align-middle">
                         <div class="align-middle" style="line-height: 24px">使用優惠代碼：</div>
@@ -331,10 +325,13 @@ export default {
                     vm.isLoading = false;
                 }
             });
-        }
+        },
     },
     created() {
         this.getCart();
+    },
+    mounted() {
+
     },
     beforeDestroy () {
 
@@ -356,8 +353,3 @@ export default {
     }
 }
 </script>
-
-<style scoped>
-
-
-</style>

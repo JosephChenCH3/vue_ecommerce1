@@ -1,10 +1,7 @@
 <template>
     <div>
         <div class="btn-group ml-3" v-if="cartsNum != 0">
-            <!--Local Storage-->
-            <!--<button type="button" class="btn btn-sm btn-outline-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" @click="getCart"> -->
             <button type="button" class="btn btn-sm btn-outline-danger dropdown-toggle fix-btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" @click="getCartFromLS">
-            <!--Local Storage-->
                 <i v-if="status.loading != 'cart'" class="fas fa-cart-arrow-down"></i>
                 <i v-if="status.loading == 'cart'" class="fas fa-spinner fa-pulse"></i>
             </button>  
@@ -65,7 +62,7 @@ export default {
             console.log("item",item)
             const newIndex = vm.cartArrayToLS.indexOf(item);
             vm.cartArrayToLS.splice(newIndex, 1);
-            vm.$bus.$emit('cartStatus:push', vm.cartArrayToLS);//*********
+            vm.$bus.$emit('cartStatus:push', -1);//讓Search Input判斷是否位移 //vm.cartArrayToLS
             localStorage.setItem("Cart", JSON.stringify(vm.cartArrayToLS));
             vm.$bus.$emit('message:push', `已移除 ${item.product.title} 商品`, 'success');
             vm.getCartFromLS();
@@ -89,6 +86,7 @@ export default {
                     }
                     if (vm.cartArrayToLS.length === count) {
                         vm.cartArrayToLS = [];
+                        vm.$bus.$emit('cartStatus:push', "clear");//讓Search Input判斷是否位移
                         localStorage.setItem("Cart", JSON.stringify(vm.cartArrayToLS));
                         vm.getCartFromLS();
                         vm.btnStatus = "";
@@ -125,71 +123,6 @@ export default {
 </script>
 
 
-<style scoped>
-.dropdown-cart-menu {
-    background-color: #EFEBE6;
-    opacity: 0.85 !important;
-    width: 450px !important;
-    min-height: 10px !important;
-}
-
-.dropdown-cart-item:hover {
-    background-color: #FFF;
-}
-
-.dropdown-cart-item:active {
-    color: #212529;
-    background-color: #EFEBE6;
-}
-
-.dropdown-divider {
-    border-top: 1px solid #4d3126;
-}
-
-.red-dots {
-    height: 18px;
-    width: 18px;
-    background: #fff;
-    text-align: center;
-    border-radius: 50%;
-    border: #fff 1px solid;
-    background: #dc3545;
-    color: #fff;
-    line-height: 16px;
-    /*position: relative;*/
-    position:absolute;
-    top: -8px;
-    left: -8px;
-    z-index: 1500;
-    transition: all .5s ease-in-out;
-}
-
-.btn-group:hover>.red-dots {
-    border: #dc3545 1px solid;
-    background: #fff;
-    color: #dc3545;
-}
-
-.mousePointer {
-    cursor: pointer;
-}
-
-@media (max-width: 991.98px) {
-    .red-dots {
-    top: -8px;
-    left: -8px;
-}
-
-}
-
-
-@media (max-width: 575.98px) {
-.fix-btn-sm{
-    height: 31px;
-}
-
-
-}
-
+<style scoped src="../assets/css/CartAndPay.css">
 
 </style>

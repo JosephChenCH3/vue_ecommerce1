@@ -63,18 +63,6 @@ export default {
 </script>
 
 
-<style scoped>
-h6 span {
-    font-size: 1.3em;
-}
-.nav-link {
-    font-size: 1.5em;
-}
-.nav-link:hover {
-    background: #ACEBFF;
-}
-.icon-set {
-    width: 28px;
-    text-align: center;
-}
+<style scoped src="../assets/css/Sidebar.css">
+
 </style>

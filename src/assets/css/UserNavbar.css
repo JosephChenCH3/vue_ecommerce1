@@ -76,13 +76,6 @@
     transform: translate(108px, 0)
 }
 
-.hideobj-md {
-    display:none;
-}
-
-.mousePointer {
-    cursor: pointer;
-}
 
 /*-----media max-width: 1199.98-----*/
 @media (max-width: 1199.98px) {
@@ -131,14 +124,6 @@
 
 .set-position-cp {
     left: calc(50% + 100px);
-}
-
-.hideobj {
-    display:none;
-}
-
-.showobj {
-    display:block;
 }
 
 }

@@ -22,23 +22,4 @@
     background: rgba(0, 0, 0, 0);
     border: none;
 }
-
-/*.promo-text {
-    position: relative;
-    top: -150px;
-    left: 305px;
-}
-
-.promo-content {
-    color: #fff;
-    color: #666;
-    height: 30px;
-    line-height: 30px;
-    position: relative;
-    top: -150px;
-    margin: 0 auto;
-    background: #EFEBE6;
-    background: #4d3126;
-    background: #FAD0D0;
-}*/
 </style>

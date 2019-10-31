@@ -50,7 +50,8 @@
                         </tr>
                     </tbody>
                 </table>
-                <div v-if="order.is_paid" class="getCoupon h6 my-3 mb-5">
+                <!-- <div v-if="order.is_paid" class="getCoupon h6 my-3 mb-5"> -->
+                <div v-if="coupon.code" class="getCoupon h6 my-3 mb-5">
                     恭喜您獲得<span class="text-danger">{{coupon.percent}}</span>折優惠代碼<br>請於下次購物時輸入此優惠代碼：
                     <span  class="text-primary">{{coupon.code}}</span>，即可享有折扣優惠！
                 </div>
@@ -160,14 +161,6 @@ export default {
 }
 </script>
 
-<style scoped>
-
-.getCoupon {
-    border-radius: 5px;
-    border: #4d3126 1px solid;
-    padding: 5px 15px;
-    background: #EFEBE6;
-    color: #4d3126;
-}
+<style scoped src="@/assets/css/OrderCheck.css">
 
 </style>

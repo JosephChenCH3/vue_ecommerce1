@@ -36,9 +36,6 @@
                 <span class="sr-only">Next</span>
             </a>
         </div>
-<!-- 			<div class="card my-3">
-			<img src="@/assets/home/sale_01.jpg" class="card-img-top" alt="...">
-		</div> -->
 		<div class="row mt-4">
         	<div class="card-columns">
         	<div class="col indexCard" v-for="item in indexPromoImg">
@@ -100,40 +97,3 @@ export default {
     }
 }
 </script>
-
-
-<style scoped>
-.modal-content {
-    background: rgba(0, 0, 0, 0);
-    border: none;
-}
-
-.promo-text {
-    position: relative;
-    top: -150px;
-    left: 305px;
-}
-
-.promo-content {
-    color: #fff;
-    color: #666;
-    height: 30px;
-    line-height: 30px;
-    position: relative;
-    top: -150px;
-    margin: 0 auto;
-    background: #EFEBE6;
-    background: #4d3126;
-    background: #FAD0D0;
-}
-
-.carousel-indicators li {
-	height: 15px;
-	width: 15px;
-	border-radius: 50%;
-}
-
-.mousePointer {
-    cursor: pointer;
-}
-</style>

@@ -45,8 +45,6 @@
 </template>
 
 
-
-
 <script>
 import $ from 'jquery' // Import js file
 import SearchInput from './SearchInput'
@@ -61,7 +59,7 @@ export default {
         return {
             btnStatus: "",
             navCollapseShadowStatus: false,
-            cartStatus: [],
+            cartStatus: "",
         };
     },
     methods: {
@@ -82,14 +80,13 @@ export default {
                 $(".navbar-collapse").addClass("shadow-sm");
             } else {
                 $(".navbar-collapse").removeClass("shadow-sm");
-            }
-            
+            }       
         },
         setPpositionSI() {
-            if (this.cartStatus.length != 0) {
-                $(".set-position-si").removeClass("right100");
-            } else {
+            if (this.cartStatus == 0) {
                 $(".set-position-si").addClass("right100");
+            } else {
+                $(".set-position-si").removeClass("right100");
             }
         }
     },
@@ -105,23 +102,31 @@ export default {
         const vm = this;
         const value = this.$router.history.current.path;
         this.btnStatus = value.split("/category/").join("");
-        console.log("btnStatus",this.btnStatus)
-        this.cartStatus = JSON.parse(localStorage.getItem('Cart'));//
+        console.log("btnStatus",this.btnStatus);
+        // this.cartStatus = JSON.parse(localStorage.getItem('Cart'));
+        if(JSON.parse(localStorage.getItem('Cart')) && (JSON.parse(localStorage.getItem('Cart'))!=[])) {
+            const array = JSON.parse(localStorage.getItem('Cart'));
+            this.cartStatus = array.length;
+        } else {
+            this.cartStatus = 0;
+        }
         vm.$bus.$on('cartStatus:push', (data) => {
-             this.cartStatus = data;
+            if(data == "clear") {
+                this.cartStatus = 0;
+            } else {
+                this.cartStatus = Number(this.cartStatus + data);
+            }
         });
         $(window).bind('scroll resize', function() {
             var $this = $(this);
             var $this_Top = $this.scrollTop();
             if ($this_Top > 150) {
-                // $('.navbar-scroll').stop().animate({ top: "0px" });
                 $(".navbar-scroll").addClass("navbar-addStyle");
                 $(".set-position-si").removeClass("top35");
                 $(".set-position-cp").removeClass("top35");
                 $(".set-position-si").addClass("top20");
                 $(".set-position-cp").addClass("top20");
             } else {
-                // $('.navbar-scroll').stop().animate({ top: "0px" });
                 $(".navbar-scroll").removeClass("navbar-addStyle");
                 $(".set-position-si").removeClass("top20");
                 $(".set-position-cp").removeClass("top20");
@@ -138,204 +143,6 @@ export default {
 </script>
 
 
-<style scoped>
-.navbar {
-    height: 100px;
-    background: white \9;
-    filter: alpha(opacity=80) \9;
-    background-color: rgba(255, 255, 255, .8);
-    -webkit-transition: all .5s ease-in-out;
-    -moz-transition: all .5s ease-in-out;
-    -o-transition: all .5s ease-in-out;
-    transition: all .5s ease-in-out;
-}
+<style scoped src="../assets/css/UserNavbar.css">
 
-.navbar-addStyle {
-    height: 70px;
-    background: white \9;
-    filter: alpha(opacity=100) \9;
-    background-color: rgba(255, 255, 255, 1);
-}
-
-.navbar-brand {
-    padding-top: 0rem;
-    padding-bottom: 0rem;
-    padding-right: 15px;
-    background: white \9;
-    filter: alpha(opacity=0) \9;
-    background-color: rgba(255, 255, 255, 0);
-}
-
-.nav-item {
-    box-sizing: border-box;
-    margin: 0 5px;
-    transition: all 0.5s;
-    position: relative;
-    border: solid #fff 5px;
-    padding: 0;
-}
-
-.nav-item:hover {
-    border-bottom: 5px #FAD0D0 solid;
-}
-
-.nav-item .nav-link {
-    margin: 0;
-}
-
-.selected {
-    background: #FFEEEA;
-/*    border-bottom: 5px #FAD0D0 solid;*/
-}
-
-
-.set-position-si,.set-position-cp {
-    position: fixed;
-    -webkit-transition: all .5s ease-in-out;
-    -moz-transition: all .5s ease-in-out;
-    -o-transition: all .5s ease-in-out;
-    transition: all .5s ease-in-out;
-}
-
-.set-position-si {
-    left: calc(50% + 200px);
-}
-
-.set-position-cp {
-    left: calc(50% + 440px);
-}
-
-.top20 {
-    top: 20px;
-}
-
-.top35 {
-    top: 35px;
-}
-
-.right100 {
-    transform: translate(108px, 0)
-}
-
-.hideobj-md {
-    display:none;
-}
-
-.mousePointer {
-    cursor: pointer;
-}
-
-/*-----media max-width: 1199.98-----*/
-@media (max-width: 1199.98px) {
-.nav-item {
-    margin: 0;
-    padding: 0;
-}
-
-.set-position-si {
-    left: calc(50% + 110px);
-}
-
-.set-position-cp {
-    left: calc(50% + 350px);
-}
-
-}
-
-
-/*-----media max-width: 991.98-----*/
-@media (max-width: 991.98px) {
-.navbar-collapse {
-    background: white \9;
-    filter: alpha(opacity=100) \9;
-    background-color: rgba(255, 255, 255, 1);
-    padding-bottom:30px;  
-}
-
-.nav-item {
-    box-sizing: border-box;
-    margin: 0;
-    border: none;
-}
-
-.nav-item:hover {
-    border-bottom: none;
-}
-
-.navbar-collapse {
-    padding-top: 40px;
-}
-
-.set-position-si {
-    left: calc(50% - 190px);
-}
-
-.set-position-cp {
-    left: calc(50% + 100px);
-}
-
-.hideobj {
-    display:none;
-}
-
-.showobj {
-    display:block;
-}
-
-}
-
-
-/*-----media min-width: 991.98-----*/
-@media (min-width: 991.98px) {
-.nav-item {
-
-    border-radius: 25% / 50%;
-}
-
-.nav-item:hover {
-    border-bottom: 5px #FAD0D0 solid;
-    border-top: 5px #FAD0D0 solid;
-}
-
-.navbar-expand-lg .navbar-nav .nav-link {
-    padding-right: 0rem;
-    padding-left: 0rem;
-}
-
-}
-
-
-/*-----media max-width: 767.98-----*/
-@media (max-width: 767.98px) {
-.set-position-si {
-    left: calc(50% - 170px);
-}
-
-.set-position-cp {
-    left: calc(50% + 80px);
-}
-
-}
-
-
-/*-----media max-width: 575.98-----*/
-@media (max-width: 575.98px) {
-.set-position-si {
-    left: calc(50% - 130px);
-}
-
-.set-position-cp {
-    left: calc(50% + 50px);
-}
-
-}
-
-
-/*-----media max-width: 499.98-----*/
-@media (max-width: 499.98px) {
-.navbar-brand {
-    display: none;
-}
-
-}
 </style>

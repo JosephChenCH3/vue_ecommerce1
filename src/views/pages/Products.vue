@@ -114,12 +114,6 @@
                                         <input type="number" class="form-control" id="stock" placeholder="請輸入進貨量" v-model="tempProduct.stock">
                                     </div> 
                                 </div>
-<!--                                 <div class="form-row">
-                                    <div class="form-group col-md-6">
-                                        <label for="series">num</label>
-                                        <input type="text" class="form-control" id="series" placeholder="請輸入數量" v-model="tempProduct.num">
-                                    </div> 
-                                </div> -->
                                 <hr>
                                 <div class="form-group">
                                     <label for="description">產品描述</label>

@@ -45,17 +45,14 @@
                                 <div class="text-dark text-center mousePointer" style="height: 42px" @click="goProductDetail(item)">
                                     <span class="badge badge-pill ml-2 text-white bg-danger" v-if="item.stock < 5">熱銷</span>
                                     {{ item.title }}</div>
-                                <div class="text-center mb-2"><!--justify-content-between align-items-baseline -->
+                                <div class="text-center mb-2">
                                     <div class="d-inline" v-if="!item.price">{{ item.origin_price | currency }}</div>
                                     <del class="d-inline" v-if="item.price">{{ item.origin_price | currency}}</del>
                                     <div class="d-inline ml-2" :class="{ 'text-danger': item.origin_price }" v-if="item.price">NT{{ item.price | currency}}</div>
                                 </div>      
                                 <div class="text-center">
-                                    <!--Local Storage-->
-                                    <!-- <button type="button" class="btn btn-outline-danger btn-sm col-6" @click.stop="addCart(item.id)"> -->
                                     <button type="button" class="btn btn-outline-danger btn-sm col-6" 
                                         v-if="item.stock != 0" @click.prevent="addCartToLS(item)">
-                                    <!--Local Storage-->
                                         <i class="fas fa-spinner fa-pulse" v-if="status.cartId == item.id"></i>
                                         <i class="fas fa-cart-plus" v-if="status.cartId != item.id"></i>
                                     </button>
@@ -74,6 +71,8 @@
         </div>
     </div>
 </template>
+
+
 <script>
 import $ from 'jquery' // Import js file
 
@@ -147,23 +146,6 @@ export default {
             console.log("***",this.productCategory)
             console.log(value, item);
         },
-        //Local Storage
-        // addCart(id, qty = 1) {
-        //     const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart`;
-        //     const vm = this;
-        //     const cart = {
-        //         product_id: id,
-        //         qty,
-        //     };
-        //     console.log("id", id, "qty", qty)
-        //     vm.status.cartId = id;
-        //     this.$http.post(api, { data: cart }).then((response) => {
-        //         console.log("addCart", response.data);
-        //         vm.$bus.$emit('message:push', response.data.message, 'success');
-        //         vm.$bus.$emit('getCart:push');
-        //         vm.status.cartId = "";
-        //     });
-        // },
         addCartToLS(item, qty = 1) {
             const vm = this;
             // vm.status.cartId = item.id;
@@ -188,7 +170,7 @@ export default {
                 vm.cartArrayToLS.push(cart);
                 localStorage.setItem("Cart", JSON.stringify(vm.cartArrayToLS));
                 vm.$bus.$emit('getCartLS:push');
-                vm.$bus.$emit('cartStatus:push', vm.cartArrayToLS);//**********
+                vm.$bus.$emit('cartStatus:push', 1);//讓Search Input判斷是否位移
                 vm.$bus.$emit('message:push', `已加入購物車`, 'success');
                 hadProduct = false;
                 vm.status.cartId = "";
@@ -197,7 +179,6 @@ export default {
                 vm.status.cartId = "";
             }
         },
-        //Local Storage
         scrollToLoading() {
             const vm = this;
             const scrollTop = $(window).scrollTop();
@@ -317,107 +298,7 @@ export default {
     },
 }
 </script>
-<style scoped>
-.sidebar-sticky {
-    padding: 0;
-    height: 100%;
-    top: 100px;
-    -webkit-transition: all .5s ease-in-out;
-    -moz-transition: all .5s ease-in-out;
-    -o-transition: all .5s ease-in-out;
-    transition: all .5s ease-in-out;
-}
-.nav-link {
-    padding: 0 0 0 24px;
-}
+<style scoped src="@/assets/css/ProductCategory.css"> 
 
-.make-me-sticky {
-    position: -webkit-sticky;
-    position: sticky;
-
-}
-
-.seriesStyle a {
-    text-decoration: none;
-    color: #6c757d;
-    -webkit-transition: all .3s ease-in-out;
-    -moz-transition: all .3s ease-in-out;
-    -o-transition: all .3s ease-in-out;
-    transition: all .3s ease-in-out;
-}
-
-.seriesStyle a:hover {
-    color: #FAD0D0;
-}
-
-.image-rwd {
-    height: 246px;
-    background-size: cover;
-    background-position: center;
-}
-
-
-.arrow-animate {
-    color: #999;
-    position: relative;
-    top: 5px;
-    transition: all 3s cubic-bezier(1, 0.08, 0, 1);
-    -webkit-animation: arrowef 0.5s infinite alternate;
-    -moz-animation:arrowef 0.5s infinite alternate;
-    -o-animation: arrowef 0.5s infinite alternate;
-    animation: arrowef 0.5s infinite alternate;
-}
-
-.hideobj-md {
-    display:none;
-}
-
-.mousePointer {
-    cursor: pointer;
-}
-
-@-webkit-keyframes arrowef {
-    0%   {top: 5px;}
-    100% {top: 0px;}
-}
-@-moz-keyframes arrowef {
-    0%   {top: 5px;}
-    100% {top: 0px;}
-}
-@-o-keyframes arrowef {
-    0%   {top: 5px;}
-    100% {top: 0px;}
-}
-@keyframes arrowef {
-    0%   {top: 5px;}
-    100% {top: 0px;}
-}
-
-
-
-@media (max-width: 1199.98px) {.image-rwd {height: 200px;}}
-@media (max-width: 991.98px) {.image-rwd {height: 320px;}}
-@media (max-width: 767.98px) {
-.sidebar-sticky {
-    top: 70px;
-    z-index: 5;
-}
-
-.image-rwd {
-    height: 285px;
-}
-
-.hideobj {
-    display:none;
-}
-
-.showobj {
-    display:block;
-}
-
-}
-
-
-@media (max-width: 575.98px) {.image-rwd {height: 625px;}}
 
 </style>

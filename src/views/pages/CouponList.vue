@@ -3,20 +3,7 @@
         <loading :active.sync="isLoading"></loading>
         <div class="text-right my-3">
             <button class="btn btn-primary" @click="openModal(true)">新增優惠碼</button>
-        </div>
-<!--         <hr>
-        <div >
-            分類：
-            <div class="d-inline">
-            <button  type="button" @click.prevent="seletedCategory = 'all'"
-                class="btn btn-outline-primary btn-sm ml-1 my-1 mb-3" :class="{'active': seletedCategory == 'all'}">全部
-            </button>
-            <button v-for="item in filterCategoryItem" type="button" @click.prevent="seletedCategory = item.category"
-                class="btn btn-outline-primary btn-sm ml-1 my-1 mb-3" 
-                :class="{'active': seletedCategory == item.category}">{{ item.category }}
-            </button>
-            </div>
-        </div>  --> 
+        </div> 
         <table class="table mt4">
             <thead>      
                 <td>分類</td>
@@ -83,10 +70,6 @@
                             </div>
                         </div>
                         <div class="form-row">
-<!--                             <div class="form-group col-md-6 mr-auto">
-                                <label for="code">優惠碼</label>
-                                <input type="text" class="form-control" id="code" placeholder="優惠代碼" v-model="tempCoupon.code">
-                            </div> -->
                             <div class="form-group col-md-6 mr-auto">
                                 <label for="code">優惠碼</label>
                                 <div class="input-group mb-3">
@@ -153,12 +136,6 @@ export default {
             coupons: [],
             tempCoupon: {},
             pagenation: {},
-            // pagenation: {
-            //     current_page: 1,
-            //     has_next: true,
-            //     has_pre: false,
-            //     total_pages: ""              
-            // },
             isNew: false,
             delId: "",
             isLoading: false,
@@ -181,23 +158,6 @@ export default {
                 vm.pagenation = response.data.pagination;
             });
         },
-        // getCoupons(page = 1) {
-        //     const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/admin/coupons?page=${page}`;
-        //     const vm = this;
-        //     vm.isLoading = true;
-        //     this.$http.get(api).then((response) => {
-        //         console.log("getCoupons", response.data);
-        //         for (let i = 0; i < response.data.pagination.total_pages; i++) {
-        //             const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/admin/coupons?page=${i+1}`;
-        //             this.$http.get(api).then((response) => {
-        //                 vm.coupons = vm.coupons.concat(response.data.coupons);
-        //                 console.log("vm.categoryItem", vm.categoryItem);
-        //                 vm.isLoading = false;
-        //             });
-        //         }
-        //         console.log("vm.categoryItem222", vm.categoryItem);
-        //     });
-        // },
         selectCategory(categoryName) {
             console.log(categoryName);
             const vm = this;
@@ -261,72 +221,12 @@ export default {
                 vm.getCoupons();
             });
         },
-        // getCategoryItem() {
-        //     const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/admin/coupons?page=1`;
-        //     const vm = this;         
-        //     // vm.isLoading = true;
-        //     this.$http.get(api).then((response) => {
-        //         for (let i = 0; i < response.data.pagination.total_pages; i++) {
-        //             const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/admin/coupons?page=${i+1}`;
-        //             this.$http.get(api).then((response) => {
-        //                 vm.categoryItem = vm.categoryItem.concat(response.data.coupons);
-        //                 // vm.categoryItem = [vm.categoryItem, ...response.data.coupons];
-        //                 console.log("vm.categoryItem", vm.categoryItem);
-        //                 // vm.isLoading = false;
-        //             });
-        //         }
-        //     });
-        // },
-        // filterSeletedCategory() {
-        //     const vm = this;
-        //     if (vm.seletedCategory === "all") {
-        //         return vm.coupons;
-        //     } else {
-        //         const array = vm.coupons.filter((element) => {
-        //             return vm.seletedCategory === element.category;
-        //         }); 
-        //         return array;
-        //     }
-        // },
-        // setPegenation(item) {
-        //     this.pagenation.current_page = item;     
-        // }
     },
     computed: {
-        // filterCategoryItem() {
-        //     const vm = this;
-        //     const set = new Set();
-        //     return vm.categoryItem.filter( (element) => { return !set.has(element.category) ? set.add(element.category) : false;});
-        // },
-        // couponsWithCategory() {
-        //     const vm = this;
-        //     const couponArray = this.filterSeletedCategory();
-        //     const current_page = vm.pagenation.current_page;
-        //     // console.log(couponAarray.length);
-        //     vm.pagenation.total_pages = Math.ceil(couponArray.length / 10);
-        //     // // console.log("total_pages", vm.pagenation.total_pages);
-        //     // current_page
 
-        //     const couponArray2 = couponArray.splice(0, 10);
-        //     console.log("couponArray2", couponArray2);
-        //     return couponArray2;
-        // },
-        // pagenationWithCategory() {
-        //     pagination: {
-        //         current_page: 1
-        //         has_next: true
-        //         has_pre: false
-        //         total_pages: 2               
-        //     }
-        //     const vm = this;
-        //     const array = vm.filterSeletedCategory();
-        //     console.log(array.length);
-        //     return this.pagenation;
-        // }
     },
     created() {
         this.getCoupons();
-        // this.getCategoryItem();
     },
     mounted() {
 

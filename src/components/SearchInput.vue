@@ -47,45 +47,6 @@
 </script>
 
 
-<style scoped>
-.dropdown-search-menu {
-    min-width: 100px;
-    right: 0;
-}
-
-.dropdown-search-item:active {
-    color: #212529;
-    background-color: #FFF;
-}
-
-@media (max-width: 1199.98px) {
-.input-width {
-    /*width: 100px;*/
-}
-}
-
-@media (max-width: 991.98px) {
-.input-width {
-    width: 190px;
-}
-}
-
-@media (max-width: 575.98px) {
-.input-width {
-    width: 120px;
-}
-}
-
-@media (max-width: 499.98px) {
-.input-width {
-    width: 90px;
-}
-}
-
-@media (max-width: 349.98px) {
-.input-width {
-    width: 60px;
-}
-}
+<style scoped src="../assets/css/SearchInput.css">
 
 </style>

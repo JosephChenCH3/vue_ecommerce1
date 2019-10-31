@@ -5,7 +5,6 @@
             <div class="col-md-8 col-sm-12" style="height: 910px; background-size: cover; background-position: center" 
                 :style="{ backgroundImage: `url(${ product.imageUrl })` }">
             </div>
-
             <div class="col-md-4 col-sm-12 ml-auto">
                 <div class="h4">{{ product.title }}</div>
                 <span class="badge badge-pill ml-2" style="background-color: #C1EFFF;">{{ product.category }}</span>
@@ -26,17 +25,13 @@
                     </option>
                 </select>
                 <hr>
-                <!--Local Storage-->
-                <!-- <button type="button" class="btn btn-danger btn-sm col-12" @click="addCart(product.id, quantity)"> -->
                 <button type="button" class="btn btn-danger btn-sm col-12" v-if="product.stock != 0"
                      @click.stop="addCartToLS(product, quantity)">
-                <!--Local Storage-->
                     <i class="fas fa-spinner fa-pulse" v-if="status.cartId == product.id"></i>
                     <i class="fas fa-cart-plus" v-if="status.cartId != product.id"></i>
                 </button>
                 <div class="mt-2 text-right mousePointer" v-if="product.stock != 0" @click="goBack(product)">返回前頁</div>
                 <button type="button" class="btn btn-danger btn-sm col-12" v-if="product.stock == 0" @click="goBack(product)">
-                <!--Local Storage-->
                     <i class="fas fa-spinner fa-pulse" v-if="status.cartId == product.id"></i>
                     <i class="fas fa-backspace" v-if="status.cartId != product.id"></i>
                     返回前頁
@@ -76,23 +71,6 @@ export default {
                 vm.product =  response.data.product;
             });
         },
-        //Local Storage
-        // addCart(id, qty = 1) {
-        //     const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart`;
-        //     const vm = this;
-        //     const cart = {
-        //         product_id: id,
-        //         qty,
-        //     };
-        //     console.log("id", id, "qty", qty)
-        //     vm.status.cartId = id;
-        //     this.$http.post(api, { data: cart }).then((response) => {
-        //         console.log("addCart", response.data);
-        //         vm.$bus.$emit('message:push', response.data.message, 'success');
-        //         vm.$bus.$emit('getCart:push');
-        //         vm.status.cartId = "";
-        //     });
-        // },
         addCartToLS(item, qty = 1) {
             const vm = this;
             vm.status.cartId = item.id;
@@ -117,7 +95,7 @@ export default {
                 vm.cartArrayToLS.push(cart);
                 localStorage.setItem("Cart", JSON.stringify(vm.cartArrayToLS));
                 vm.$bus.$emit('getCartLS:push');
-                vm.$bus.$emit('cartStatus:push', vm.cartArrayToLS);//**********
+                vm.$bus.$emit('cartStatus:push', 1);//讓Search Input判斷是否位移
                 vm.$bus.$emit('message:push', `已加入購物車`, 'success');
                 hadProduct = false;
                 vm.status.cartId = "";
@@ -126,7 +104,6 @@ export default {
                 vm.status.cartId = "";
             }
         },
-        //Local Storage
         goBack(item) {
             this.status.cartId = item.id;
             this.$router.go(-1);
@@ -142,9 +119,3 @@ export default {
     }
 }
 </script>
-
-<style scoped>
-.mousePointer {
-    cursor: pointer;
-}
-</style>

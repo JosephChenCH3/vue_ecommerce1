@@ -9,7 +9,8 @@
 </template>
 
 <style lang="scss">
-@import "./assets/all";
+@import "./assets/css/all.scss";
+@import "./assets/css/AllStyle";
 
 html,body {
 	font-family:arial,"Microsoft JhengHei","微軟正黑體",sans-serif !important;
