@@ -7,10 +7,10 @@
             </button>  
             <div class="dropdown-menu dropdown-menu-right px-2 dropdown-cart-menu" @click.stop="">
                 <div class="dropdown-cart-item px-0 d-flex" v-for="item in cartArrayToLS" :key="item.id">
-                    <div class="d-inline col">{{ item.product.title }}</div>
-                    <div class="d-inline col-2 text-right">{{ item.qty }} /件</div>
-                    <div class="d-inline col-2">{{ item.product.price * item.qty | currency }}</div>
-                    <div class="d-inline col-1 text-right mousePointer" @click="removeCartItemToSL(item)">
+                    <div class="d-inline co-pm col">{{ item.product.title }}</div>
+                    <div class="d-inline co-pm col-2 text-right">{{ item.qty }} /件</div>
+                    <div class="d-inline co-pm col-2">{{ item.product.price * item.qty | currency }}</div>
+                    <div class="d-inline co-pm col-1 text-right mousePointer" @click="removeCartItemToSL(item)">
                         <i v-if="status.itemId !== item.id" class="far fa-trash-alt"></i>
                         <i v-if="status.itemId === item.id" class="fas fa-spinner fa-pulse"></i>
                     </div>

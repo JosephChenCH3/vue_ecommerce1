@@ -83,7 +83,7 @@ export default {
             }       
         },
         setPpositionSI() {
-            if (this.cartStatus == 0) {
+            if (this.cartStatus != 0) {
                 $(".set-position-si").addClass("right100");
             } else {
                 $(".set-position-si").removeClass("right100");

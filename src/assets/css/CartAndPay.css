@@ -56,5 +56,16 @@
     height: 31px;
 }
 
+}
+
+
+/*-----media max-width: 499.98-----*/
+@media (max-width: 499.98px) {
+.dropdown-cart-menu {
+    width: 300px !important;
+}
+.co-pm {
+    padding: 0;
+}
 
 }
