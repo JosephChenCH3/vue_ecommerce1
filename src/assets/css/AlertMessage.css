@@ -6,24 +6,9 @@
   right: 20px;
   z-index: 1100;
   transition: all 6s cubic-bezier(1, 0.08, 0, 1);
-  -webkit-animation: arrowef 12s infinite ease-in-out;
-  -moz-animation:arrowef 12s infinite ease-in-out;
-  -o-animation: arrowef 12s infinite ease-in-out;
   animation: arrowef 12s infinite ease-in-out;
 }
 
-@-webkit-keyframes arrowef {
-  0%   {bottom: 10px;}
-  100% {bottom: 150px;}
-}
-@-moz-keyframes arrowef {
-  0%   {bottom: 10px;}
-  100% {bottom: 150px;}
-}
-@-o-keyframes arrowef {
-  0%   {bottom: 10px;}
-  100% {bottom: 150px;}
-}
 @keyframes arrowef {
   0%   {bottom: 10px;}
   100% {bottom: 150px;}

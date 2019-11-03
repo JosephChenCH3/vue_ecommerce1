@@ -34,6 +34,16 @@
         },
         methods: {
             searchProduct() {
+                const str = this.searchValue;
+                console.log(str)
+                if (str.trim() === "") {
+                    if (this.searchStatus == "product") {
+                        this.$bus.$emit('message:push', `請輸入商品名稱`, 'danger');
+                    } else {
+                        this.$bus.$emit('message:push', `請輸入訂單編號`, 'danger');
+                    }
+                    return;
+                }
                 if (this.searchStatus === "product") {
                     this.$router.push(`/search/${this.searchValue}`);
                 } else if (this.searchStatus === "orderNum") {

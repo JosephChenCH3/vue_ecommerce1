@@ -10,28 +10,28 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">                
                     <ul class="navbar-nav mr-auto ml-3 justify-content-around">
-                        <li class="nav-item px-3" @click="getCategoryToShow" :class="{'selected': btnStatus == 'women'}">
-                            <router-link class="nav-link h6" to="/category/women">
+                        <li class="nav-item">
+                            <router-link class="nav-link px-3 h6" to="/category/women" :class="{'selected': btnStatus == 'women'}">
                                 WOMEN
                             </router-link>
                         </li>
-                        <li class="nav-item px-3" @click="getCategoryToShow" :class="{'selected': btnStatus == 'men'}">
-                            <router-link class="nav-link h6" to="/category/men">
+                        <li class="nav-item">
+                            <router-link class="nav-link px-3 h6" to="/category/men" :class="{'selected': btnStatus == 'men'}">
                                 MEN
                             </router-link>
                         </li>
-                        <li class="nav-item px-3" @click="getCategoryToShow" :class="{'selected': btnStatus == 'kids'}">
-                            <router-link class="nav-link h6" to="/category/kids">
+                        <li class="nav-item">
+                            <router-link class="nav-link px-3 h6" to="/category/kids" :class="{'selected': btnStatus == 'kids'}">
                                 KIDS
                             </router-link>
                         </li>
-                        <li class="nav-item px-3" @click="getCategoryToShow" :class="{'selected': btnStatus == 'baby'}">
-                            <router-link class="nav-link h6" to="/category/baby">
+                        <li class="nav-item">
+                            <router-link class="nav-link px-3 h6" to="/category/baby" :class="{'selected': btnStatus == 'baby'}">
                                 BABY
                             </router-link>
                         </li>
-                        <li class="nav-item px-3" @click="getCategoryToShow" :class="{'selected': btnStatus == 'sports'}">
-                            <router-link class="nav-link h6" to="/category/sports">
+                        <li class="nav-item">
+                            <router-link class="nav-link px-3 h6" to="/category/sports" :class="{'selected': btnStatus == 'sports'}">
                                 SPORTS
                             </router-link>
                         </li>
@@ -63,17 +63,6 @@ export default {
         };
     },
     methods: {
-        getCategoryToShow() {
-            const str1 = event.target.childNodes[0].textContent;
-            console.log(event)
-            const str2 = str1.toString();
-            const str3 = str2.trim();
-            const str4 = str3.toLowerCase();
-            const vm = this;
-            vm.btnStatus = `${str4}`;
-            $('#navbarSupportedContent').collapse('hide');
-            console.log("str4",str4)
-        },
         navCollapseShadow() {
             this.navCollapseShadowStatus = !this.navCollapseShadowStatus;
             if(this.navCollapseShadowStatus) {
@@ -94,6 +83,11 @@ export default {
 
     },
     watch: {
+        '$route': function (a ,b) {
+            // console.log('$route', a, b)
+            this.btnStatus = this.$route.params.productCategory;
+            $('#navbarSupportedContent').collapse('hide');
+        },
         cartStatus() {
             this.setPpositionSI();
         }
@@ -103,7 +97,6 @@ export default {
         const value = this.$router.history.current.path;
         this.btnStatus = value.split("/category/").join("");
         console.log("btnStatus",this.btnStatus);
-        // this.cartStatus = JSON.parse(localStorage.getItem('Cart'));
         if(JSON.parse(localStorage.getItem('Cart')) && (JSON.parse(localStorage.getItem('Cart'))!=[])) {
             const array = JSON.parse(localStorage.getItem('Cart'));
             this.cartStatus = array.length;

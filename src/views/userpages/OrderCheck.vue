@@ -2,7 +2,7 @@
     <div>
     	<loading :active.sync="isLoading"></loading>
         <div class="my-5 row justify-content-center">
-            <form class="col-lg-6" @submit.prevent="payOrder" v-if="order.products != null">
+            <form class="col-lg-6" @submit.once.prevent="payOrder" v-if="order.products != null">
                 <table class="table">
                     <thead>
                         <th>品名</th>
@@ -57,10 +57,13 @@
                 </div>
                 <div class="text-center"><router-link v-if="order.is_paid" to="/">返回首頁 繼續購物</router-link></div>
                 <div class="text-right" v-if="order.is_paid === false">
-                    <button class="btn btn-danger">
-                    	<i class="fas fa-spinner fa-pulse" v-if="status.loading == 'orderLoading'"></i>
+                    <button class="btn btn-danger" v-if="status.loading != 'orderLoading'">
                 	    確認付款
                     </button>
+                    <div v-if="status.loading == 'orderLoading'">
+                        <i class="fas fa-spinner fa-pulse" v-if="status.loading == 'orderLoading'"></i>
+                        付款中，請勿關閉或離開此頁面
+                    </div>
                 </div>
             </form>
             <div class="h5 col-md-7 mt-5 text-left text-danger" v-if="order.products == null">訂單編號：{{orderId}}不存在</div>

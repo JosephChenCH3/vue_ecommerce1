@@ -77,6 +77,8 @@ $warning:       $yellow !default;
 $danger:        $red !default;
 $light:         $gray-100 !default;
 $light300:      $gray-300 !default;
+$light600:      $gray-600 !default;
+$light700:      $gray-700 !default;
 $dark:          $gray-800 !default;
 $lativbg:       $lativ-bg !default;
 
@@ -93,6 +95,8 @@ $theme-colors: map-merge(
     "danger":     $danger,
     "light":      $light,
     "light300":   $light300,
+    "light600":   $light600,
+    "light700":   $light700,
     "dark":       $dark,
     "lativbg":    $lativbg
   ),

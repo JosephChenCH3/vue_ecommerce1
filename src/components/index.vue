@@ -5,7 +5,8 @@
         <div class="container">
             <div style="height: 150px"></div>
             <div id="v-content" v-bind:style="{minHeight: Height+'px'}">
-                <router-view :key="$route.path"></router-view>
+                <!-- <router-view :key="$route.path"></router-view> -->
+                <router-view></router-view>
             </div>
             <div class="top mousePointer" @click="goToTop">
                 <img width="31" height="49" src="@/assets/icon_top.png" alt=""/>
@@ -65,10 +66,10 @@ export default {
                 $(".coupon").removeClass("top_show");
             }
         }).scroll();
-        $('.carousel').carousel();//?
-        //动态设置内容高度 让footer始终居底   header+footer的高度是190
+        // $('.carousel').carousel();
+        // 动态设置内容高度 让footer始终居底   header+footer的高度是190
         this.Height = document.documentElement.clientHeight - 300;  
-        //监听浏览器窗口变化　
+        // 监听浏览器窗口变化　
         window.onresize = ()=> { this.Height = document.documentElement.clientHeight - 300 };
     }
 }

@@ -85,28 +85,28 @@
                     <ValidationProvider name="email" rules="required|email">
                         <div slot-scope="{ errors }">
                             <label for="useremail">Email</label>
-                            <input class="form-control" v-model="form.user.email" id="useremail" placeholder="請輸入姓名">
+                            <input type="email" class="form-control" v-model="form.user.email" id="useremail" placeholder="請輸入Email">
                             <p class="text-danger">{{ errors[0] }}</p>
                         </div>
                     </ValidationProvider>
                     <ValidationProvider name="收件人姓名" rules="required">
                         <div slot-scope="{ errors }">
                             <label for="username">收件人姓名</label>
-                            <input class="form-control" v-model="form.user.name" id="username" placeholder="請輸入姓名">
+                            <input type="text" class="form-control" v-model="form.user.name" id="username" placeholder="請輸入姓名">
                             <p class="text-danger">{{ errors[0] }}</p>
                         </div>
                     </ValidationProvider>
                     <ValidationProvider name="收件人電話" rules="required">
                         <div slot-scope="{ errors }">
                             <label for="usertel">收件人電話</label>
-                            <input class="form-control" v-model="form.user.tel" id="usertel" placeholder="請輸入電話">
+                            <input type="tel" class="form-control" v-model="form.user.tel" id="usertel" placeholder="請輸入電話">
                             <p class="text-danger">{{ errors[0] }}</p>
                         </div>
                     </ValidationProvider>
                     <ValidationProvider name="收件人地址" rules="required">
                         <div slot-scope="{ errors }">
                             <label for="useraddress">收件人地址</label>
-                            <input class="form-control" v-model="form.user.address" id="useraddress" placeholder="請輸入地址">
+                            <input type="text" class="form-control" v-model="form.user.address" id="useraddress" placeholder="請輸入地址">
                             <p class="text-danger">{{ errors[0] }}</p>
                         </div>
                     </ValidationProvider>
@@ -139,10 +139,13 @@
                     </ValidationProvider>
 
                     <div class="text-right">
-                        <button class="btn btn-danger">
-                            <i class="fas fa-spinner fa-pulse" v-if="status.loading == 'orderLoading'"></i>
+                        <button class="btn btn-danger" v-if="status.loading != 'orderLoading'">
                             送出訂單
                         </button>
+                        <div v-if="status.loading == 'orderLoading'">
+                            <i class="fas fa-spinner fa-pulse" v-if="status.loading == 'orderLoading'"></i>
+                            訂單傳送中
+                        </div>
                     </div>
                 </form>
 
@@ -172,8 +175,6 @@ export default {
                 loading: "",
             },
             carts: {},
-            choseCouponStatus: true,
-            choseCouponNum: 5,
             coupon: "",
             coupon_is_enabled: "",
             form: {
@@ -271,7 +272,6 @@ export default {
                     console.log("訂單完成", response);
                     if (response.data.success) {
                         vm.updateStock();//更新庫存數量
-                        // vm.$router.push(`/`);
                         vm.$router.push(`/order-check/${response.data.orderId}`);
                     } else {
                         vm.$bus.$emit('message:push', response.data.message, 'danger');

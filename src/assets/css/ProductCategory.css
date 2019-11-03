@@ -2,9 +2,6 @@
     padding: 0;
     height: 100%;
     top: 100px;
-    -webkit-transition: all .5s ease-in-out;
-    -moz-transition: all .5s ease-in-out;
-    -o-transition: all .5s ease-in-out;
     transition: all .5s ease-in-out;
 }
 .nav-link {
@@ -20,9 +17,6 @@
 .seriesStyle a {
     text-decoration: none;
     color: #6c757d;
-    -webkit-transition: all .3s ease-in-out;
-    -moz-transition: all .3s ease-in-out;
-    -o-transition: all .3s ease-in-out;
     transition: all .3s ease-in-out;
 }
 
@@ -41,25 +35,9 @@
     position: relative;
     top: 5px;
     transition: all 3s cubic-bezier(1, 0.08, 0, 1);
-    -webkit-animation: arrowef 0.5s infinite alternate;
-    -moz-animation:arrowef 0.5s infinite alternate;
-    -o-animation: arrowef 0.5s infinite alternate;
     animation: arrowef 0.5s infinite alternate;
 }
 
-
-@-webkit-keyframes arrowef {
-    0%   {top: 5px;}
-    100% {top: 0px;}
-}
-@-moz-keyframes arrowef {
-    0%   {top: 5px;}
-    100% {top: 0px;}
-}
-@-o-keyframes arrowef {
-    0%   {top: 5px;}
-    100% {top: 0px;}
-}
 @keyframes arrowef {
     0%   {top: 5px;}
     100% {top: 0px;}

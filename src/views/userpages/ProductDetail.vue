@@ -6,10 +6,10 @@
                 :style="{ backgroundImage: `url(${ product.imageUrl })` }">
             </div>
             <div class="col-md-4 col-sm-12 ml-auto">
-                <div class="h4">{{ product.title }}</div>
-                <span class="badge badge-pill ml-2" style="background-color: #C1EFFF;">{{ product.category }}</span>
-                <span class="badge badge-pill ml-2" style="background-color: #C1FFE9;">{{ product.type }}</span>
-                <span class="badge badge-pill ml-2" style="background-color: #FFF8C1;">{{ product.series }}</span>
+                <h4>{{ product.title }}</h4>
+                <span class="badge badge-pill ml-2 mousePointer" style="background-color: #C1EFFF;" @click="badgeSearch">{{ product.category }}</span>
+                <span class="badge badge-pill ml-2 mousePointer" style="background-color: #C1FFE9;" @click="badgeSearch">{{ product.type }}</span>
+                <span class="badge badge-pill ml-2 mousePointer" style="background-color: #FFF8C1;" @click="badgeSearch">{{ product.series }}</span>
                 <div class="h5 text-right" v-if="product.origin_price">
                     <del>{{ product.origin_price * quantity }} 元</del>
                 </div>
@@ -35,7 +35,27 @@
                     <i class="fas fa-spinner fa-pulse" v-if="status.cartId == product.id"></i>
                     <i class="fas fa-backspace" v-if="status.cartId != product.id"></i>
                     返回前頁
-                </button>          
+                </button>
+                <hr class="mt-5">
+                <div>
+                    <h6 class="text-light600">產地及材質</h6>
+                    <ul class="text-light700">
+                        <li>產地：中國</li>
+                        <li>表布：聚醯胺纖維100%</li>
+                        <li>裡布：聚醯胺纖維100%</li>
+                        <li>填充物：羽絨90%、羽毛10%</li>
+                    </ul>
+                    <h6 class="text-light600">注意事項及洗滌方式</h6>
+                    <ol class="text-light700">
+                        <li>深淺色請分開洗滌。</li>
+                        <li>請拉上拉鍊後放入細網洗衣袋中清洗，以保持商品型態。</li>
+                        <li>洗滌時，水溫請低於30℃；請使用中性洗劑；浸泡時間不宜過長。</li>
+                        <li>請勿使用漂白劑、螢光增白劑及衣物柔軟劑，以免破壞布料。</li>
+                        <li>不可濕放，清洗後請快速調整商品型態，並吊掛陰乾即可，勿直接曝曬於陽光下。</li>
+                        <li>本商品因採用輕柔面料，可能會因靜電或摩擦引起鑽絨，敬請諒解。</li>
+                    </ol>
+                    <p class="text-light600">※因拍攝燈光效果可能造成色差，請以實品顏色為準。</p>
+                </div>
             </div>
         </div>      
     </div>
@@ -44,7 +64,7 @@
 
 <script>
 export default {
-    data() {
+    data () {
         return {
         	productId: "",
             product: {
@@ -60,7 +80,7 @@ export default {
         }
     },
     methods: {
-        getProduct() {
+        getProduct () {
             const id = this.productId;
             const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/product/${id}`;
             const vm = this;
@@ -71,7 +91,7 @@ export default {
                 vm.product =  response.data.product;
             });
         },
-        addCartToLS(item, qty = 1) {
+        addCartToLS (item, qty = 1) {
             const vm = this;
             vm.status.cartId = item.id;
             if (localStorage.getItem("Cart")) {
@@ -104,17 +124,21 @@ export default {
                 vm.status.cartId = "";
             }
         },
-        goBack(item) {
+        badgeSearch (e) {
+            let str = e.target.firstChild.nodeValue;
+            this.$router.push(`/search/${str}`);
+        },
+        goBack (item) {
             this.status.cartId = item.id;
             this.$router.go(-1);
             this.status.cartId = "";
         }
     },
-    created() {
+    created () {
     	this.productId = this.$route.params.productId;
         this.getProduct();
     },
-    beforeCreate() {
+    beforeCreate () {
         console.log("beforeCreate",this.$route.params.productCategory);
     }
 }

@@ -3,7 +3,7 @@
         <loading :active.sync="isLoading"></loading>
         <div class="row">
             <div class="sidebar-sticky col-md-2 col-sm-12 col-xs-12 make-me-sticky accordion mousePointer" id="sidebar">
-                <div class="col-md-12 col-sm-4 col-xs-4 mb-2 hideobj" v-for="(itemt,it) in getTypeItem" :key="itemt.id">   
+                <div class="col-md-12 col-sm-4 col-xs-4 mb-2 hideobj" v-for="(itemt,it) in getTypeItem" :key="itemt.id">
                     <div class="collapsed" 
                         data-toggle="collapse" :data-target="`#${itemt.id}`" aria-expanded="true" :aria-controls="itemt.id">
                         <i class="fas fa-tshirt text-light300 px-1"></i>
@@ -30,21 +30,23 @@
             </div>
             <div class="col-md-10 col-sm-12 px-3 ml-auto">
                 <div class="card mr-auto" style="margin-bottom: 30px;">
-                    <img :src="require(`@/assets/categorypic${productCategoryImage}.jpg`)" class="card-img-top" alt="...">
+                    <img v-if="currentPath.name != 'Search'" :src="require(`@/assets/categorypic/${currentPath.params.productCategory}.jpg`)" class="card-img-top" alt="...">
+                    <img v-if="currentPath.name == 'Search'" src="@/assets/categorypic/search.jpg" class="card-img-top" alt="...">
                 </div>
-                <div class="h4" style="margin-bottom: 30px;" v-if="productCategoryImage == '/search'">
+                <div class="h4" style="margin-bottom: 30px;" v-if="currentPath.name == 'Search'">
                     搜尋結果：
-                    <span v-if="productShowArrayLength ==0">無此商品</span>
+                    <span v-if="products.length ==0">無此商品</span>
                 </div>
                 <div class="row">
-                    <div class="col-lg-3 col-md-6 col-sm-6" v-for="item in products" style="margin-bottom: 30px;">
+                    <div class="col-lg-3 col-md-6 col-sm-6" v-for="item in productsInfiniteScroll" style="margin-bottom: 30px;">
                         <div class="card shadow-sm border-2">
                             <div class="image-rwd mousePointer" :style="{ backgroundImage: `url(${ item.imageUrl })` }" @click="goProductDetail(item)">
                             </div> 
                             <div class="card-body">
                                 <div class="text-dark text-center mousePointer" style="height: 42px" @click="goProductDetail(item)">
                                     <span class="badge badge-pill ml-2 text-white bg-danger" v-if="item.stock < 5">熱銷</span>
-                                    {{ item.title }}</div>
+                                    {{ item.title }}
+                                </div>
                                 <div class="text-center mb-2">
                                     <div class="d-inline" v-if="!item.price">{{ item.origin_price | currency }}</div>
                                     <del class="d-inline" v-if="item.price">{{ item.origin_price | currency}}</del>
@@ -63,7 +65,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-12 text-center text-lativbg" v-if="productShow.status">
+                    <div class="col-md-12 text-center text-lativbg" v-if="products.length > productsInfiniteScrollCount">
                         <i class="fas fa-chevron-down fa-2x arrow-animate"></i>
                     </div>
                 </div>
@@ -83,13 +85,10 @@ export default {
     data() {
         return {
             products: [],
+            productsInfiniteScrollCount: 4,
             productsOriginal: [],
-            productCategory: "",
-            productSeries: {status: "", value:""},
-            productCategoryImage: "",
-            productShow: {count: 4, status: true},
-            productShowArrayLength: "",
-            categoryName: "women,men,kids,baby,sports",
+            productsGetCategory: [],
+            currentPath: {},
             isLoading: false,
             status: {
                 loading: false,
@@ -99,52 +98,46 @@ export default {
         };
     },
     methods: {
-        getProducts(value, valueS) {
-            const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/products/all`;
-            // const api = `${process.env.VUE_APP_APIPATH}/api/casper/products/all`;
+        getCategory() {
             const vm = this;
             let array = [];
-            let arrayScroll = [];
-            vm.isLoading = true;
-            this.$http.get(api).then((response) => {
-                console.log("getProducts", response.data);
-                vm.isLoading = false;
-                array =  response.data.products; 
-                if ( vm.categoryName.indexOf(value) != -1) {
-                    let arraySeries = array.filter( (element) => { return (element.category == value) && (element.is_enabled === 1) });
-                    vm.productsOriginal = Object.assign([], arraySeries);
-                    console.log("AAA", vm.productsOriginal.length);
-                    if (vm.productSeries.status == "series") {
-                        arrayScroll = arraySeries.filter( (element) => { return (element.series == valueS) });
-                    } else {
-                        arrayScroll = arraySeries;
-                    }
-                } else {
-                    arrayScroll = array.filter( (element) => { return ((element.title.indexOf(value)!= -1) || (element.type.indexOf(value)!= -1) || (element.series.indexOf(value)!= -1)) && (element.is_enabled === 1) });
-                }   
-                vm.productShowArrayLength = arrayScroll.length
-                if(vm.productShowArrayLength <= vm.productShow.count) {
-                    vm.productShow.status = false;
-                }
-                // vm.products = arrayScroll;
-                vm.products = arrayScroll.splice(0, vm.productShow.count);
-            });
-        },
-        async goProductDetail(item) {
-            const vm = this;
-            this.loading = true;
-            vm.$router.push(`/product-detail/${item.id}`);
-            this.loading = false;
+            let value = "";
+            if (vm.currentPath.name != 'Search') {
+                value = vm.currentPath.params.productCategory;
+                array = vm.productsOriginal.filter( (element) => {
+                    return (element.category == value) && (element.is_enabled === 1);
+                });
+            } else {
+                value = vm.currentPath.params.searchStr;
+                array = vm.productsOriginal.filter( (element) => { 
+                    return ((element.title.indexOf(value)!= -1) || (element.category == value) || (element.type.indexOf(value)!= -1) || (element.series.indexOf(value)!= -1)) && (element.is_enabled === 1);
+                });
+            }
+            vm.productsGetCategory = Object.assign([], array);
+            vm.products = vm.productsGetCategory; 
         },
         getSeries(item) {
-            this.productSeries.status = "series";
-            this.productSeries.value = item;
-            this.productShow.count = 4;
-            this.productShow.status = true;
-            const value = this.productCategory.split("/category/").join("");
-            this.getProducts(value, item);
-            console.log("***",this.productCategory)
-            console.log(value, item);
+            const vm = this;
+            vm.productsInfiniteScrollCount = 4;
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
+            let array = vm.productsGetCategory.filter( (element) => {
+                return element.series == item;
+            });
+            vm.products = array;
+            console.log(vm.products,array,vm.productsGetCategory)
+        },
+        filterSideBtn (value) {
+            const vm = this;
+            if (vm.currentPath.name != 'Search') {
+                const set = new Set();
+                let array = vm.productsGetCategory.filter( (element) => { 
+                    if (element[value]) {
+                       return !set.has(element[value]) ? set.add(element[value]) : false; 
+                    }
+                });
+                return array;
+            }
         },
         addCartToLS(item, qty = 1) {
             const vm = this;
@@ -179,6 +172,12 @@ export default {
                 vm.status.cartId = "";
             }
         },
+        async goProductDetail(item) {
+            const vm = this;
+            this.loading = true;
+            vm.$router.push(`/product-detail/${item.id}`);
+            this.loading = false;
+        },
         scrollToLoading() {
             const vm = this;
             const scrollTop = $(window).scrollTop();
@@ -188,27 +187,8 @@ export default {
             const windowHeight = $(window).height();
             //console.log("windowHeight", windowHeight);
             const height = $('body').height() - $(window).height();
-            //console.log(height);
-            if(vm.productShowArrayLength < vm.productShow.count) {
-                console.log("stop add count")
-                return;
-            } else {
-                if ((scrollTop + 50) > height) {
-                    vm.productShow.count = vm.productShow.count + 4;
-                    let value = "";
-                    if (vm.productCategory.indexOf('/search') != -1) {
-                        console.log("scrollToLoadingValue",value, vm.productCategory)
-                        value = vm.productCategory.split("/search/").join("");
-                    } else {
-                        value = vm.productCategory.split("/category/").join("");  
-                    }
-
-                    if (vm.productSeries.status == "series") {
-                        vm.getProducts(value, vm.productSeries.value);
-                    } else {
-                        vm.getProducts(value);
-                    }
-                } 
+            if ((scrollTop + 100) > height) {
+                vm.productsInfiniteScrollCount = vm.productsInfiniteScrollCount + 4;
             }
         },
         debounce(func, delay) {
@@ -240,55 +220,54 @@ export default {
         //       func.apply(context, args)
         //     }
         //   }
-        // }
+        // } 
     },
     watch: {
-
+        '$route' (a ,b) {
+            const vm = this;
+            vm.isLoading = true;
+            vm.currentPath = vm.$route;
+            vm.productsInfiniteScrollCount = 4;
+            vm.getCategory();
+            vm.isLoading = false;
+        }
     },
     computed: {
         getTypeItem() {
-            const vm = this;
-            const set = new Set();
-            let array = vm.productsOriginal.filter( (element) => { 
-                if (element.type) {
-                   return !set.has(element.type) ? set.add(element.type) : false; 
-                }
-            });
-            return array;
+            return this.filterSideBtn ("type");
         },
         getSeriesItem() {
-            const vm = this;
-            const set = new Set();
-            let array = vm.productsOriginal.filter( (element) => {
-                if (element.series) {
-                   return !set.has(element.series) ? set.add(element.series) : false; 
-                }
-            });
-            return array;
+            return this.filterSideBtn ("series");
         },
+        productsInfiniteScroll () {
+            const vm = this;
+            const array = Object.assign([], vm.products); 
+            return array.splice(0, vm.productsInfiniteScrollCount);
+        }
     },
     created() {
         const vm = this;
-        let product = ""; 
-        let currentPath = vm.$router.history.current.path;
-        if (currentPath.indexOf('/search') != -1) {
-            vm.productCategory = currentPath;
-            vm.productCategoryImage = "/search";
-            product = currentPath.split("/search/").join("");
-        } else {
-            vm.productCategory = currentPath;
-            vm.productCategoryImage = currentPath.split("/category").join("");
-            product = currentPath.split("/category/").join("");
-        }
-        vm.getProducts(product);
-        console.log("created-getProducts", product);
-        // window.addEventListener('scroll', vm.scrollToLoading);
-        window.addEventListener('scroll', vm.debounce(vm.scrollToLoading, 300));
-        // window.addEventListener('scroll', vm.throttle(vm.scrollToLoading, 100));
+        vm.currentPath = vm.$route;
+        const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/products/all`;
+        vm.isLoading = true;
+        this.$http.get(api).then((response) => {
+            console.log("getProducts", response.data);
+            vm.productsOriginal = response.data.products;
+            vm.isLoading = false;
+        }).then( () => {
+            vm.getCategory();
+        }).then( () => {
+            if(vm.products.length > vm.productsInfiniteScrollCount) {
+                window.addEventListener('scroll', vm.debounce(vm.scrollToLoading, 300));
+            } else {
+                console.log("stop scroll",vm.products.length,vm.productsInfiniteScrollCount);
+                return;
+            }
+        });
     },
     mounted() {
         const vm = this;
-        $("#inputGroupSelect01").change(function(){
+        $("#inputGroupSelect01").change( ()=>{
             let value = $('select option:selected').children('a').contents()[0].nodeValue;     
             vm.getSeries(value);
         });
@@ -299,6 +278,5 @@ export default {
 }
 </script>
 <style scoped src="@/assets/css/ProductCategory.css"> 
-
 
 </style>
