@@ -24,38 +24,38 @@
 import Alert from '@/components/AlertMessage'
 
 export default {
-    components: {
-        Alert
-    },
-    data() {
-        return {
-            user: 
+  components: {
+    Alert
+  },
+  data () {
+    return {
+      user:
             {
-                username: "",
-                password: ""
+              username: '',
+              password: ''
             },
-            isLoading: false
-        };
-    },
-    methods: {
-        signin() {
-            const api = `${process.env.VUE_APP_APIPATH}/admin/signin`;
-            // const api = 'https://vue-course-api.hexschool.io/admin/signin';
-            //'https://vue-course-api.hexschool.io/api/joseph/products';
-            const vm = this;
-            vm.isLoading = true;
-            this.$http.post(api, vm.user).then((response) => {
-                console.log(response.data);
-                if (response.data.success) {
-                    vm.isLoading = false;
-                    vm.$router.push('/admin/products');
-                } else {
-                    vm.isLoading = false;
-                    alert(response.data.error.message);
-                }
-            });
-        }
+      isLoading: false
     }
+  },
+  methods: {
+    signin () {
+      const api = `${process.env.VUE_APP_APIPATH}/admin/signin`
+      // const api = 'https://vue-course-api.hexschool.io/admin/signin';
+      // 'https://vue-course-api.hexschool.io/api/joseph/products';
+      const vm = this
+      vm.isLoading = true
+      this.$http.post(api, vm.user).then((response) => {
+        console.log(response.data)
+        if (response.data.success) {
+          vm.isLoading = false
+          vm.$router.push('/admin/products')
+        } else {
+          vm.isLoading = false
+          alert(response.data.error.message)
+        }
+      })
+    }
+  }
 }
 </script>
 <style scoped src="@/assets/css/Login.css">

@@ -9,7 +9,7 @@
             </h6>
             <ul class="nav flex-column mb-2">
                 <li class="nav-item" @click.prevent="btnStatus='/admin/products'">
-                    <router-link class="nav-link" :class="{'active': btnStatus==='/admin/products'}"  
+                    <router-link class="nav-link" :class="{'active': btnStatus==='/admin/products'}"
                     to="/admin/products">
                         <i class="fas fa-box-open icon-set"></i>
                         產品列表
@@ -23,7 +23,7 @@
                     </router-link>
                 </li>
                 <li class="nav-item" @click.prevent="btnStatus='/admin/coupon-List'">
-                    <router-link class="nav-link" :class="{'active': btnStatus==='/admin/coupon-List'}"  
+                    <router-link class="nav-link" :class="{'active': btnStatus==='/admin/coupon-List'}"
                     to="/admin/coupon-List">
                         <i class="fas fa-ticket-alt icon-set"></i>
                         優惠券列表
@@ -51,17 +51,16 @@
 
 <script>
 export default {
-    data() {
-        return {
-            btnStatus: ""
-        };
-    },
-    created() {
-        this.btnStatus = this.$router.history.current.path;
+  data () {
+    return {
+      btnStatus: ''
     }
+  },
+  created () {
+    this.btnStatus = this.$router.history.current.path
+  }
 }
 </script>
-
 
 <style scoped src="../assets/css/Sidebar.css">
 

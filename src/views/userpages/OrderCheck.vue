@@ -74,93 +74,92 @@
     </div>
 </template>
 
-
 <script>
 export default {
-    data() {
-        return {
-        	orderId: "",
+  data () {
+    return {
+        	orderId: '',
         	order: {
         		user: {},
-        		is_paid: ""
+        		is_paid: ''
         	},
-            isLoading: false,
+      isLoading: false,
         	status: {
-            	loading: "",
+            	loading: ''
         	},
-            coupon: {
-                code: "",
-                percent: ""
-            },
-            coupons: [
-                {code: "coxns",percent: 9.9},
-                {code: "fql5mm",percent: 9.5},
-                {code: "rgtofr",percent: 9.0},
-                {code: "z7ucfk",percent: 8.8},
-                {code: "dqgpmm",percent: 8.5},
-                {code: "zyv87",percent: 8.0},
-                {code: "puw3lk",percent: 9.9},
-                {code: "mu542",percent: 9.9},
-                {code: "0e2ty",percent: 7.5},
-            ],
-        }
-    },
-    methods: {
-        getOrder() {	//-LrXLt1_Jbup2L5Ns110
-        	const vm = this;
-        	const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/order/${vm.orderId}`;
-            vm.isLoading = true;
-            this.$http.get(api).then((response) => {
-                console.log("getOrder", response.data);
-                if (response.data.order != null) {
-                    vm.order = response.data.order;     
-                } else {
-                    vm.$bus.$emit('message:push', '此訂單編號不存在，請重新搜尋', 'danger');
-                }
-                vm.isLoading = false;      
-            });
-        },
-        payOrder() {
-        	const vm = this;
-        	const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/pay/${vm.orderId}`;
-            vm.status.loading = "orderLoading";
-            this.$http.post(api).then((response) => {
-                console.log("getOrder", response.data);
-                if (response.data.success) {
-                	vm.order.is_paid = response.data.is_paid;
-                	vm.$bus.$emit('message:push', response.data.message, 'success');
-                    const codei = Math.floor(Math.random() * 9);
-                    this.coupon.code = this.coupons[codei].code;
-                    this.coupon.percent = this.coupons[codei].percent;
-                } else {
-                	vm.$bus.$emit('message:push', response.data.message, 'danger');
-                }
-                vm.getOrder();
-                vm.status.loading = "";
-            });
-        },
-    },
-    created() {
-    	this.orderId = this.$route.params.userorderId;
-    	this.getOrder();     
-    },
-    beforeRouteLeave (to, from , next) {
-        if (this.order.products != null) {
-            if (!this.order.is_paid) {
-                const answer = confirm(`您尚未結帳完成此筆交易，\n您的訂單編號是：${this.orderId}\n日後可利用上方導航欄之搜尋功能\n選擇搜尋訂單功能並輸入此訂單號碼\n即可取回此筆訂單並完成付款！\n謝謝您的選購！`)
-                if (answer) {
-                    alert(`請記下/複製您的訂單編號：${this.orderId}`)
-                    next();
-                } else {
-                    next(false);
-                }            
-            } else {
-                next();
-            }     
-        } else {
-            next();
-        } 
+      coupon: {
+        code: '',
+        percent: ''
+      },
+      coupons: [
+        { code: 'coxns', percent: 9.9 },
+        { code: 'fql5mm', percent: 9.5 },
+        { code: 'rgtofr', percent: 9.0 },
+        { code: 'z7ucfk', percent: 8.8 },
+        { code: 'dqgpmm', percent: 8.5 },
+        { code: 'zyv87', percent: 8.0 },
+        { code: 'puw3lk', percent: 9.9 },
+        { code: 'mu542', percent: 9.9 },
+        { code: '0e2ty', percent: 7.5 }
+      ]
     }
+  },
+  methods: {
+    getOrder () {	// -LrXLt1_Jbup2L5Ns110
+        	const vm = this
+        	const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/order/${vm.orderId}`
+      vm.isLoading = true
+      this.$http.get(api).then((response) => {
+        console.log('getOrder', response.data)
+        if (response.data.order != null) {
+          vm.order = response.data.order
+        } else {
+          vm.$bus.$emit('message:push', '此訂單編號不存在，請重新搜尋', 'danger')
+        }
+        vm.isLoading = false
+      })
+    },
+    payOrder () {
+        	const vm = this
+        	const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/pay/${vm.orderId}`
+      vm.status.loading = 'orderLoading'
+      this.$http.post(api).then((response) => {
+        console.log('getOrder', response.data)
+        if (response.data.success) {
+                	vm.order.is_paid = response.data.is_paid
+                	vm.$bus.$emit('message:push', response.data.message, 'success')
+          const codei = Math.floor(Math.random() * 9)
+          this.coupon.code = this.coupons[codei].code
+          this.coupon.percent = this.coupons[codei].percent
+        } else {
+                	vm.$bus.$emit('message:push', response.data.message, 'danger')
+        }
+        vm.getOrder()
+        vm.status.loading = ''
+      })
+    }
+  },
+  created () {
+    	this.orderId = this.$route.params.userorderId
+    	this.getOrder()
+  },
+  beforeRouteLeave (to, from, next) {
+    if (this.order.products != null) {
+      if (!this.order.is_paid) {
+        const answer = confirm(`您尚未結帳完成此筆交易，\n您的訂單編號是：${this.orderId}\n日後可利用上方導航欄之搜尋功能\n選擇搜尋訂單功能並輸入此訂單號碼\n即可取回此筆訂單並完成付款！\n謝謝您的選購！`)
+        if (answer) {
+          alert(`請記下/複製您的訂單編號：${this.orderId}`)
+          next()
+        } else {
+          next(false)
+        }
+      } else {
+        next()
+      }
+    } else {
+      next()
+    }
+  }
 }
 </script>
 

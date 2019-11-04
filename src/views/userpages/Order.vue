@@ -3,7 +3,7 @@
         <loading :active.sync="isLoading"></loading>
         <div class="my-5 container col-lg-6" v-if="carts.total == 0">
             <div class="h5 text-danger">購物清單中無任何商品</div>
-            <router-link to="/">返回首頁</router-link> 
+            <router-link to="/">返回首頁</router-link>
         </div>
         <div class="my-5 container col-lg-6" v-if="carts.total != 0">
             <div class="card border-0 shadow-sm">
@@ -54,7 +54,7 @@
                             <input class="custom-control-input align-middle" type="checkbox" id="is_enabled" :true-value="1" :false-value="0" v-model="coupon_is_enabled">
                             <label class="custom-control-label" for="is_enabled"></label>
                         </div>
-                    </div> 
+                    </div>
                 </div>
 
                 <div class="input-group mb-3 col-12" v-if="coupon_is_enabled">
@@ -158,198 +158,197 @@
 </template>
 <script>
 import $ from 'jquery' // Import js file
-import { ValidationProvider, ValidationObserver } from "vee-validate";
-
+import { ValidationProvider, ValidationObserver } from 'vee-validate'
 
 export default {
-    components: {  
-        ValidationProvider, // ---vee-validate---
-        ValidationObserver  // ---vee-validate---
-    },
-    data() {
-        return {
-            isLoading: false,
-            status: {
-                itemId: "",
-                cartId: "",
-                loading: "",
-            },
-            carts: {},
-            coupon: "",
-            coupon_is_enabled: "",
-            form: {
-                user: {
-                    name: "",
-                    email: "",
-                    tel: "",
-                    address: "",
-                    payment_method: ""
-                },
-                message: "",
-                cartArrayToLS: [],           
-            },
-            user: 
+  components: {
+    ValidationProvider, // ---vee-validate---
+    ValidationObserver // ---vee-validate---
+  },
+  data () {
+    return {
+      isLoading: false,
+      status: {
+        itemId: '',
+        cartId: '',
+        loading: ''
+      },
+      carts: {},
+      coupon: '',
+      coupon_is_enabled: '',
+      form: {
+        user: {
+          name: '',
+          email: '',
+          tel: '',
+          address: '',
+          payment_method: ''
+        },
+        message: '',
+        cartArrayToLS: []
+      },
+      user:
             {
-                username: "joseph.work01@gmail.com",
-                password: "Jcw0122456"
-            },
-        };
-    },
-    methods: {
-        getCart() {
-            const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart`;
-            const vm = this;
-            vm.isLoading = true;
-            this.$http.get(api).then((response) => {
-                console.log("getCart", response.data.data);
-                vm.carts = response.data.data;
-                vm.isLoading = false;
-            });
-        },
-        removeCartItem(item) {
-            const id = item.id;
-            const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart/${id}`;
-            const vm = this;
-            vm.status.itemId = item.id;
-            this.$http.delete(api).then((response) => {
-                console.log(response.data, item);
-                if(response.data.success) {
-                    vm.$bus.$emit('message:push', `${response.data.message} ${item.product.title} 商品`, 'success');
-                } else {
-                    vm.$bus.$emit('message:push', response.data.message, 'danger');
-                }
-                this.getCart();
-                vm.status.itemId = "";
-            });
-        },
-        removeAllCartItem() {   
-            const vm = this;
-            vm.isLoading = true;
-            vm.carts.carts.forEach( (element)=>{
-                let id = element.id;
-                let api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart/${id}`;
-                this.$http.delete(api).then((response) => {
-                    console.log(response.data);
-                    if(response.data.success) {
-                        console.log("Cart已全刪除")
-                    } else {
-                        console.log("Cart全刪除失敗")
-                    }
-                    vm.isLoading = false;
-                });    
-            });
-        },
-        addCouponCode() {
-            const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/coupon`;
-            const vm = this;
-            const coupon = {
-                code: vm.coupon
+              username: 'joseph.work01@gmail.com',
+              password: 'Jcw0122456'
             }
-            vm.status.loading = "couponLoading";
-            this.$http.post(api, { data: coupon }).then((response) => {
-                console.log("套用優惠券", response.data);
-                if (!response.data.success) {
-                    vm.$bus.$emit('message:push', response.data.message, 'danger');
-                } else {
-                    vm.$bus.$emit('message:push', response.data.message, 'success');
-                }
-                this.getCart();
-                vm.status.loading = "";
-            });
-        },
-        async creatOrder() {
-            const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/order`;
-            const vm = this;
-            const orderInfo = vm.form;
-            vm.status.loading = "orderLoading";
-            const isValid = await this.$refs.observer.validate();// ---vee-validate---
-            if (!isValid) {
-                vm.$bus.$emit('message:push', "表單填寫不完整", 'danger');
-                vm.status.loading = "";
-            } else {
-                //上傳訂單
-                vm.$http.post(api, { data: orderInfo }).then((response) => {
-                    console.log("訂單完成", response);
-                    if (response.data.success) {
-                        vm.updateStock();//更新庫存數量
-                        vm.$router.push(`/order-check/${response.data.orderId}`);
-                    } else {
-                        vm.$bus.$emit('message:push', response.data.message, 'danger');
-                    }
-                    // this.getCart();
-                    vm.status.loading = "";
-                }); 
-            }   
-        },
-        updateStock() {
-            const vm = this;
-            let count = 0;
-            let newProduct = [];
-            const apilg = `${process.env.VUE_APP_APIPATH}/admin/signin`;
-            vm.isLoading = true;
-            //登入後台驗證
-            this.$http.post(apilg, vm.user).then((response) => {
-                console.log(response.data);
-                if (response.data.success) {
-                    console.log("登入成功");    
-                    vm.carts.carts.forEach((element) => {
-                        let apiGet = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/product/${element.product_id}`;
-                        //抓取該ID對應商品
-                        vm.$http.get(apiGet).then((response) => {
-                            if (response.data.success) {
-                                console.log("getProduct", response.data,);
-                                //計算 庫存-已訂購
-                                newProduct = response.data.product;
-                                newProduct.stock = element.product.stock - element.qty;
-                                console.log("newProduct", newProduct, "stock", newProduct.stock);                       
-                                let apiPut = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/admin/product/${element.product_id}`;
-                                //更新商品資訊(包含新庫存量)
-                                vm.$http.put(apiPut, { data: newProduct }).then((response) => {
-                                    console.log("putProduct", response.data);
-                                    if (response.data.success) {
-                                        console.log("庫存量更新成功");
-                                        vm.isLoading = false;
-                                    } else {
-                                        console.log("庫存量更新錯誤");
-                                        vm.isLoading = false;
-                                    }
-                                });
-                            } else {
-                                console.log("產品資料讀入錯誤");
-                                vm.isLoading = false;
-                            }
-                        });
-                    });
-                } else {
-                    console.log("登入失敗", response.data.error.message);
-                    vm.isLoading = false;
-                }
-            });
-        },
-    },
-    created() {
-        this.getCart();
-    },
-    mounted() {
-
-    },
-    beforeDestroy () {
-
-    },
-    beforeRouteLeave (to, from , next) {
-        if (this.carts.total == 0) {
-            next();
-        } else if (to.name === "OrderCheck") {
-            next();
-        } else {
-            const answer = confirm(`訂單尚未建立，\n離開此頁面將遺失商品資訊！`)
-            if (answer) {
-                this.removeAllCartItem(); 
-                next();
-            } else {
-                next(false);
-            }     
-        }
     }
+  },
+  methods: {
+    getCart () {
+      const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart`
+      const vm = this
+      vm.isLoading = true
+      this.$http.get(api).then((response) => {
+        console.log('getCart', response.data.data)
+        vm.carts = response.data.data
+        vm.isLoading = false
+      })
+    },
+    removeCartItem (item) {
+      const id = item.id
+      const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart/${id}`
+      const vm = this
+      vm.status.itemId = item.id
+      this.$http.delete(api).then((response) => {
+        console.log(response.data, item)
+        if (response.data.success) {
+          vm.$bus.$emit('message:push', `${response.data.message} ${item.product.title} 商品`, 'success')
+        } else {
+          vm.$bus.$emit('message:push', response.data.message, 'danger')
+        }
+        this.getCart()
+        vm.status.itemId = ''
+      })
+    },
+    removeAllCartItem () {
+      const vm = this
+      vm.isLoading = true
+      vm.carts.carts.forEach((element) => {
+        let id = element.id
+        let api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart/${id}`
+        this.$http.delete(api).then((response) => {
+          console.log(response.data)
+          if (response.data.success) {
+            console.log('Cart已全刪除')
+          } else {
+            console.log('Cart全刪除失敗')
+          }
+          vm.isLoading = false
+        })
+      })
+    },
+    addCouponCode () {
+      const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/coupon`
+      const vm = this
+      const coupon = {
+        code: vm.coupon
+      }
+      vm.status.loading = 'couponLoading'
+      this.$http.post(api, { data: coupon }).then((response) => {
+        console.log('套用優惠券', response.data)
+        if (!response.data.success) {
+          vm.$bus.$emit('message:push', response.data.message, 'danger')
+        } else {
+          vm.$bus.$emit('message:push', response.data.message, 'success')
+        }
+        this.getCart()
+        vm.status.loading = ''
+      })
+    },
+    async creatOrder () {
+      const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/order`
+      const vm = this
+      const orderInfo = vm.form
+      vm.status.loading = 'orderLoading'
+      const isValid = await this.$refs.observer.validate()// ---vee-validate---
+      if (!isValid) {
+        vm.$bus.$emit('message:push', '表單填寫不完整', 'danger')
+        vm.status.loading = ''
+      } else {
+        // 上傳訂單
+        vm.$http.post(api, { data: orderInfo }).then((response) => {
+          console.log('訂單完成', response)
+          if (response.data.success) {
+            vm.updateStock()// 更新庫存數量
+            vm.$router.push(`/order-check/${response.data.orderId}`)
+          } else {
+            vm.$bus.$emit('message:push', response.data.message, 'danger')
+          }
+          // this.getCart();
+          vm.status.loading = ''
+        })
+      }
+    },
+    updateStock () {
+      const vm = this
+      let count = 0
+      let newProduct = []
+      const apilg = `${process.env.VUE_APP_APIPATH}/admin/signin`
+      vm.isLoading = true
+      // 登入後台驗證
+      this.$http.post(apilg, vm.user).then((response) => {
+        console.log(response.data)
+        if (response.data.success) {
+          console.log('登入成功')
+          vm.carts.carts.forEach((element) => {
+            let apiGet = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/product/${element.product_id}`
+            // 抓取該ID對應商品
+            vm.$http.get(apiGet).then((response) => {
+              if (response.data.success) {
+                console.log('getProduct', response.data)
+                // 計算 庫存-已訂購
+                newProduct = response.data.product
+                newProduct.stock = element.product.stock - element.qty
+                console.log('newProduct', newProduct, 'stock', newProduct.stock)
+                let apiPut = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/admin/product/${element.product_id}`
+                // 更新商品資訊(包含新庫存量)
+                vm.$http.put(apiPut, { data: newProduct }).then((response) => {
+                  console.log('putProduct', response.data)
+                  if (response.data.success) {
+                    console.log('庫存量更新成功')
+                    vm.isLoading = false
+                  } else {
+                    console.log('庫存量更新錯誤')
+                    vm.isLoading = false
+                  }
+                })
+              } else {
+                console.log('產品資料讀入錯誤')
+                vm.isLoading = false
+              }
+            })
+          })
+        } else {
+          console.log('登入失敗', response.data.error.message)
+          vm.isLoading = false
+        }
+      })
+    }
+  },
+  created () {
+    this.getCart()
+  },
+  mounted () {
+
+  },
+  beforeDestroy () {
+
+  },
+  beforeRouteLeave (to, from, next) {
+    if (this.carts.total == 0) {
+      next()
+    } else if (to.name === 'OrderCheck') {
+      next()
+    } else {
+      const answer = confirm(`訂單尚未建立，\n離開此頁面將遺失商品資訊！`)
+      if (answer) {
+        this.removeAllCartItem()
+        next()
+      } else {
+        next(false)
+      }
+    }
+  }
 }
 </script>

@@ -61,53 +61,51 @@
     </div>
 </template>
 
-
 <script>
 export default {
-    data() {
-        return {
-        	orderId: "",
+  data () {
+    return {
+        	orderId: '',
         	order: {
         		user: {},
-        		is_paid: ""
-        	}
-        	,
-        	status: {
-            	loading: "",
+        		is_paid: ''
         	},
-        }
-    },
-    methods: {
-        getOrder() {	
-        	const vm = this;
-        	const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/order/${vm.orderId}`;
-            vm.isLoading = true;
-            this.$http.get(api).then((response) => {
-                console.log("getOrder", response.data);
-                vm.isLoading = false;
-                vm.order = response.data.order;
-            });
-        },
-        payOrder() {
-        	const vm = this;
-        	const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/pay/${vm.orderId}`;
-            vm.status.loading = "orderLoading";
-            this.$http.post(api).then((response) => {
-                console.log("getOrder", response.data);
-                if (response.data.success) {
-                	vm.order.is_paid = response.data.is_paid;
-                	vm.$bus.$emit('message:push', response.data.message, 'success');
-                } else {
-                	vm.$bus.$emit('message:push', response.data.message, 'danger');
-                }
-                vm.getOrder();
-                vm.status.loading = "";
-            });
-        }
-    },
-    created() {
-    	this.orderId = this.$route.params.orderId;
-    	this.getOrder();
+        	status: {
+            	loading: ''
+        	}
     }
+  },
+  methods: {
+    getOrder () {
+        	const vm = this
+        	const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/order/${vm.orderId}`
+      vm.isLoading = true
+      this.$http.get(api).then((response) => {
+        console.log('getOrder', response.data)
+        vm.isLoading = false
+        vm.order = response.data.order
+      })
+    },
+    payOrder () {
+        	const vm = this
+        	const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/pay/${vm.orderId}`
+      vm.status.loading = 'orderLoading'
+      this.$http.post(api).then((response) => {
+        console.log('getOrder', response.data)
+        if (response.data.success) {
+                	vm.order.is_paid = response.data.is_paid
+                	vm.$bus.$emit('message:push', response.data.message, 'success')
+        } else {
+                	vm.$bus.$emit('message:push', response.data.message, 'danger')
+        }
+        vm.getOrder()
+        vm.status.loading = ''
+      })
+    }
+  },
+  created () {
+    	this.orderId = this.$route.params.orderId
+    	this.getOrder()
+  }
 }
 </script>

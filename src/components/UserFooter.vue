@@ -30,44 +30,40 @@
                 <span class="px-2">|</span>
                 <router-link class="foot-item d-inline" to="/page/policy">隱私政策</router-link>
                 <span class="px-2">|</span>
-                <router-link class="foot-item d-inline" to="/page/disclaimer">免責聲明</router-link>  
+                <router-link class="foot-item d-inline" to="/page/disclaimer">免責聲明</router-link>
             </div>
             <div class="footer-copyright text-center text-light800 mt-3">© 2019 Copyright</div>
             <div class="footer-copyright text-center text-light800 pb-3">
                 本站為單純的作品練習，資料、圖片來源皆出各衣飾網站，不使用於任何商業或營利行為
-            </div>          
+            </div>
         </footer>
     </div>
 </template>
 
-
-
 <script>
-//import $ from 'jquery' // Import js file
+// import $ from 'jquery' // Import js file
 
 export default {
-    data() {
-        return {
-
-        };
-    },
-    methods: {
-        // clicker() {
-        //     $(function(){
-        //         $("#FB").click(function(){
-        //             window.open('http://www.facebook.com/share.php?u='.concat(encodeURIComponent(location.href)))
-        //         })
-        //     }) 
-        // }
-    },
-    created() {
+  data () {
+    return {
 
     }
+  },
+  methods: {
+    // clicker() {
+    //     $(function(){
+    //         $("#FB").click(function(){
+    //             window.open('http://www.facebook.com/share.php?u='.concat(encodeURIComponent(location.href)))
+    //         })
+    //     })
+    // }
+  },
+  created () {
+
+  }
 }
 </script>
 
 <style scoped src="../assets/css/UserFooter.css">
 
-
 </style>
-

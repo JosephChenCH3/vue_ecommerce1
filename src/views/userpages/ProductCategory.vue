@@ -4,7 +4,7 @@
         <div class="row">
             <div class="sidebar-sticky col-md-2 col-sm-12 col-xs-12 make-me-sticky accordion mousePointer" id="sidebar">
                 <div class="col-md-12 col-sm-4 col-xs-4 mb-2 hideobj" v-for="(itemt,it) in getTypeItem" :key="itemt.id">
-                    <div class="collapsed" 
+                    <div class="collapsed"
                         data-toggle="collapse" :data-target="`#${itemt.id}`" aria-expanded="true" :aria-controls="itemt.id">
                         <i class="fas fa-tshirt text-light300 px-1"></i>
                         <span class="text-muted">{{ itemt.type }}</span>
@@ -21,7 +21,7 @@
                     <select class="custom-select" id="inputGroupSelect01">
                         <optgroup value="${itemt.id}-sm" v-for="(itemt,it) in getTypeItem" :key="`${itemt.id}-sm`">
                             <option disabled>{{ itemt.type }}</option>
-                            <option value="items" v-for="(items,is) in getSeriesItem" :key="`${items.id}-sm`" v-if="items.type == itemt.type">   
+                            <option value="items" v-for="(items,is) in getSeriesItem" :key="`${items.id}-sm`" v-if="items.type == itemt.type">
                                 <a href="#">{{ items.series }}</a>
                             </option>
                         </optgroup>
@@ -41,7 +41,7 @@
                     <div class="col-lg-3 col-md-6 col-sm-6" v-for="item in productsInfiniteScroll" style="margin-bottom: 30px;">
                         <div class="card shadow-sm border-2">
                             <div class="image-rwd mousePointer" :style="{ backgroundImage: `url(${ item.imageUrl })` }" @click="goProductDetail(item)">
-                            </div> 
+                            </div>
                             <div class="card-body">
                                 <div class="text-dark text-center mousePointer" style="height: 42px" @click="goProductDetail(item)">
                                     <span class="badge badge-pill ml-2 text-white bg-danger" v-if="item.stock < 5">熱銷</span>
@@ -51,9 +51,9 @@
                                     <div class="d-inline" v-if="!item.price">{{ item.origin_price | currency }}</div>
                                     <del class="d-inline" v-if="item.price">{{ item.origin_price | currency}}</del>
                                     <div class="d-inline ml-2" :class="{ 'text-danger': item.origin_price }" v-if="item.price">NT{{ item.price | currency}}</div>
-                                </div>      
+                                </div>
                                 <div class="text-center">
-                                    <button type="button" class="btn btn-outline-danger btn-sm col-6" 
+                                    <button type="button" class="btn btn-outline-danger btn-sm col-6"
                                         v-if="item.stock != 0" @click.prevent="addCartToLS(item)">
                                         <i class="fas fa-spinner fa-pulse" v-if="status.cartId == item.id"></i>
                                         <i class="fas fa-cart-plus" v-if="status.cartId != item.id"></i>
@@ -74,209 +74,207 @@
     </div>
 </template>
 
-
 <script>
 import $ from 'jquery' // Import js file
 
 export default {
-    components: {
+  components: {
 
+  },
+  data () {
+    return {
+      products: [],
+      productsInfiniteScrollCount: 4,
+      productsOriginal: [],
+      productsGetCategory: [],
+      currentPath: {},
+      isLoading: false,
+      status: {
+        loading: false,
+        cartId: ''
+      },
+      cartArrayToLS: []
+    }
+  },
+  methods: {
+    getCategory () {
+      const vm = this
+      let array = []
+      let value = ''
+      if (vm.currentPath.name != 'Search') {
+        value = vm.currentPath.params.productCategory
+        array = vm.productsOriginal.filter((element) => {
+          return (element.category == value) && (element.is_enabled === 1)
+        })
+      } else {
+        value = vm.currentPath.params.searchStr
+        array = vm.productsOriginal.filter((element) => {
+          return ((element.title.indexOf(value) != -1) || (element.category == value) || (element.type.indexOf(value) != -1) || (element.series.indexOf(value) != -1)) && (element.is_enabled === 1)
+        })
+      }
+      vm.productsGetCategory = Object.assign([], array)
+      vm.products = vm.productsGetCategory
     },
-    data() {
-        return {
-            products: [],
-            productsInfiniteScrollCount: 4,
-            productsOriginal: [],
-            productsGetCategory: [],
-            currentPath: {},
-            isLoading: false,
-            status: {
-                loading: false,
-                cartId: ""
-            },
-            cartArrayToLS: [],
-        };
+    getSeries (item) {
+      const vm = this
+      vm.productsInfiniteScrollCount = 4
+      document.body.scrollTop = 0
+      document.documentElement.scrollTop = 0
+      let array = vm.productsGetCategory.filter((element) => {
+        return element.series == item
+      })
+      vm.products = array
+      console.log(vm.products, array, vm.productsGetCategory)
     },
-    methods: {
-        getCategory() {
-            const vm = this;
-            let array = [];
-            let value = "";
-            if (vm.currentPath.name != 'Search') {
-                value = vm.currentPath.params.productCategory;
-                array = vm.productsOriginal.filter( (element) => {
-                    return (element.category == value) && (element.is_enabled === 1);
-                });
-            } else {
-                value = vm.currentPath.params.searchStr;
-                array = vm.productsOriginal.filter( (element) => { 
-                    return ((element.title.indexOf(value)!= -1) || (element.category == value) || (element.type.indexOf(value)!= -1) || (element.series.indexOf(value)!= -1)) && (element.is_enabled === 1);
-                });
-            }
-            vm.productsGetCategory = Object.assign([], array);
-            vm.products = vm.productsGetCategory; 
-        },
-        getSeries(item) {
-            const vm = this;
-            vm.productsInfiniteScrollCount = 4;
-            document.body.scrollTop = 0;
-            document.documentElement.scrollTop = 0;
-            let array = vm.productsGetCategory.filter( (element) => {
-                return element.series == item;
-            });
-            vm.products = array;
-            console.log(vm.products,array,vm.productsGetCategory)
-        },
-        filterSideBtn (value) {
-            const vm = this;
-            if (vm.currentPath.name != 'Search') {
-                const set = new Set();
-                let array = vm.productsGetCategory.filter( (element) => { 
-                    if (element[value]) {
-                       return !set.has(element[value]) ? set.add(element[value]) : false; 
-                    }
-                });
-                return array;
-            }
-        },
-        addCartToLS(item, qty = 1) {
-            const vm = this;
-            // vm.status.cartId = item.id;
-            if (localStorage.getItem("Cart")) {
-                vm.cartArrayToLS = JSON.parse(localStorage.getItem('Cart'));
-            }
-            let hadProduct = true;
-            const timestamp = Math.floor(Date.now());
-            const cart = {
-                product: item ,
-                qty,
-                timestamp,
-            };
-            vm.cartArrayToLS.filter( (element)=> {
-                console.log("element", element, "element.id", element.product.id, "item", item.id);
-                if(element.product.id == item.id) {
-                    return hadProduct = false;
-                }
-            }); 
-            console.log("hadProduct", hadProduct);   
-            if ( hadProduct) {
-                vm.cartArrayToLS.push(cart);
-                localStorage.setItem("Cart", JSON.stringify(vm.cartArrayToLS));
-                vm.$bus.$emit('getCartLS:push');
-                vm.$bus.$emit('cartStatus:push', 1);//讓Search Input判斷是否位移
-                vm.$bus.$emit('message:push', `已加入購物車`, 'success');
-                hadProduct = false;
-                vm.status.cartId = "";
-            } else {
-                vm.$bus.$emit('message:push', `購物車內已有此商品`, 'warning');
-                vm.status.cartId = "";
-            }
-        },
-        async goProductDetail(item) {
-            const vm = this;
-            this.loading = true;
-            vm.$router.push(`/product-detail/${item.id}`);
-            this.loading = false;
-        },
-        scrollToLoading() {
-            const vm = this;
-            const scrollTop = $(window).scrollTop();
-            // console.log("scrollTop", scrollTop);
-            const bodyHeight = $('body').height();
-            //console.log("bodyHeight", bodyHeight); 
-            const windowHeight = $(window).height();
-            //console.log("windowHeight", windowHeight);
-            const height = $('body').height() - $(window).height();
-            if ((scrollTop + 100) > height) {
-                vm.productsInfiniteScrollCount = vm.productsInfiniteScrollCount + 4;
-            }
-        },
-        debounce(func, delay) {
-            var timer = null;
-            return function () {
-                var context = this;
-                var args = arguments;
-                clearTimeout(timer);
-                timer = setTimeout(function () {
-                    func.apply(context, args)
-                }, delay);
-            }
-        },
-        // throttle(func, threshhold) {
-        //   var last, timer;
-        //   if (threshhold) threshhold = 250;
-        //   return function () {
-        //     var context = this
-        //     var args = arguments
-        //     var now = +new Date()
-        //     if (last && now < last + threshhold) {
-        //       clearTimeout(timer)
-        //       timer = setTimeout(function () {
-        //         last = now
-        //         func.apply(context, args)
-        //       }, threshhold)
-        //     } else {
-        //       last = now
-        //       func.apply(context, args)
-        //     }
-        //   }
-        // } 
+    filterSideBtn (value) {
+      const vm = this
+      if (vm.currentPath.name != 'Search') {
+        const set = new Set()
+        let array = vm.productsGetCategory.filter((element) => {
+          if (element[value]) {
+            return !set.has(element[value]) ? set.add(element[value]) : false
+          }
+        })
+        return array
+      }
     },
-    watch: {
-        '$route' (a ,b) {
-            const vm = this;
-            vm.isLoading = true;
-            vm.currentPath = vm.$route;
-            vm.productsInfiniteScrollCount = 4;
-            vm.getCategory();
-            vm.isLoading = false;
+    addCartToLS (item, qty = 1) {
+      const vm = this
+      // vm.status.cartId = item.id;
+      if (localStorage.getItem('Cart')) {
+        vm.cartArrayToLS = JSON.parse(localStorage.getItem('Cart'))
+      }
+      let hadProduct = true
+      const timestamp = Math.floor(Date.now())
+      const cart = {
+        product: item,
+        qty,
+        timestamp
+      }
+      vm.cartArrayToLS.filter((element) => {
+        console.log('element', element, 'element.id', element.product.id, 'item', item.id)
+        if (element.product.id == item.id) {
+          return hadProduct = false
         }
+      })
+      console.log('hadProduct', hadProduct)
+      if (hadProduct) {
+        vm.cartArrayToLS.push(cart)
+        localStorage.setItem('Cart', JSON.stringify(vm.cartArrayToLS))
+        vm.$bus.$emit('getCartLS:push')
+        vm.$bus.$emit('cartStatus:push', 1)// 讓Search Input判斷是否位移
+        vm.$bus.$emit('message:push', `已加入購物車`, 'success')
+        hadProduct = false
+        vm.status.cartId = ''
+      } else {
+        vm.$bus.$emit('message:push', `購物車內已有此商品`, 'warning')
+        vm.status.cartId = ''
+      }
     },
-    computed: {
-        getTypeItem() {
-            return this.filterSideBtn ("type");
-        },
-        getSeriesItem() {
-            return this.filterSideBtn ("series");
-        },
-        productsInfiniteScroll () {
-            const vm = this;
-            const array = Object.assign([], vm.products); 
-            return array.splice(0, vm.productsInfiniteScrollCount);
-        }
+    async goProductDetail (item) {
+      const vm = this
+      this.loading = true
+      vm.$router.push(`/product-detail/${item.id}`)
+      this.loading = false
     },
-    created() {
-        const vm = this;
-        vm.currentPath = vm.$route;
-        const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/products/all`;
-        vm.isLoading = true;
-        this.$http.get(api).then((response) => {
-            console.log("getProducts", response.data);
-            vm.productsOriginal = response.data.products;
-            vm.isLoading = false;
-        }).then( () => {
-            vm.getCategory();
-        }).then( () => {
-            if(vm.products.length > vm.productsInfiniteScrollCount) {
-                window.addEventListener('scroll', vm.debounce(vm.scrollToLoading, 300));
-            } else {
-                console.log("stop scroll",vm.products.length,vm.productsInfiniteScrollCount);
-                return;
-            }
-        });
+    scrollToLoading () {
+      const vm = this
+      const scrollTop = $(window).scrollTop()
+      // console.log("scrollTop", scrollTop);
+      const bodyHeight = $('body').height()
+      // console.log("bodyHeight", bodyHeight);
+      const windowHeight = $(window).height()
+      // console.log("windowHeight", windowHeight);
+      const height = $('body').height() - $(window).height()
+      if ((scrollTop + 100) > height) {
+        vm.productsInfiniteScrollCount = vm.productsInfiniteScrollCount + 4
+      }
     },
-    mounted() {
-        const vm = this;
-        $("#inputGroupSelect01").change( ()=>{
-            let value = $('select option:selected').children('a').contents()[0].nodeValue;     
-            vm.getSeries(value);
-        });
+    debounce (func, delay) {
+      var timer = null
+      return function () {
+        var context = this
+        var args = arguments
+        clearTimeout(timer)
+        timer = setTimeout(function () {
+          func.apply(context, args)
+        }, delay)
+      }
+    }
+    // throttle(func, threshhold) {
+    //   var last, timer;
+    //   if (threshhold) threshhold = 250;
+    //   return function () {
+    //     var context = this
+    //     var args = arguments
+    //     var now = +new Date()
+    //     if (last && now < last + threshhold) {
+    //       clearTimeout(timer)
+    //       timer = setTimeout(function () {
+    //         last = now
+    //         func.apply(context, args)
+    //       }, threshhold)
+    //     } else {
+    //       last = now
+    //       func.apply(context, args)
+    //     }
+    //   }
+    // }
+  },
+  watch: {
+    '$route' (a, b) {
+      const vm = this
+      vm.isLoading = true
+      vm.currentPath = vm.$route
+      vm.productsInfiniteScrollCount = 4
+      vm.getCategory()
+      vm.isLoading = false
+    }
+  },
+  computed: {
+    getTypeItem () {
+      return this.filterSideBtn('type')
     },
-    beforeDestroy () {
+    getSeriesItem () {
+      return this.filterSideBtn('series')
+    },
+    productsInfiniteScroll () {
+      const vm = this
+      const array = Object.assign([], vm.products)
+      return array.splice(0, vm.productsInfiniteScrollCount)
+    }
+  },
+  created () {
+    const vm = this
+    vm.currentPath = vm.$route
+    const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/products/all`
+    vm.isLoading = true
+    this.$http.get(api).then((response) => {
+      console.log('getProducts', response.data)
+      vm.productsOriginal = response.data.products
+      vm.isLoading = false
+    }).then(() => {
+      vm.getCategory()
+    }).then(() => {
+      if (vm.products.length > vm.productsInfiniteScrollCount) {
+        window.addEventListener('scroll', vm.debounce(vm.scrollToLoading, 300))
+      } else {
+        console.log('stop scroll', vm.products.length, vm.productsInfiniteScrollCount)
+      }
+    })
+  },
+  mounted () {
+    const vm = this
+    $('#inputGroupSelect01').change(() => {
+      let value = $('select option:selected').children('a').contents()[0].nodeValue
+      vm.getSeries(value)
+    })
+  },
+  beforeDestroy () {
 
-    },
+  }
 }
 </script>
-<style scoped src="@/assets/css/ProductCategory.css"> 
+<style scoped src="@/assets/css/ProductCategory.css">
 
 </style>

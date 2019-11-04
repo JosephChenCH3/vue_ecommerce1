@@ -22,7 +22,6 @@
     </div>
 </template>
 
-
 <script>
 import $ from 'jquery' // Import js file
 import UserNavbar from './UserNavbar'
@@ -31,50 +30,49 @@ import Alert from './AlertMessage'
 import CouponModal from './CouponModal'
 
 export default {
-    components: {
+  components: {
     	UserNavbar,
     	UserFooter,
-        CouponModal,
-        Alert
-    },
-    data() {
-        return {
-            Height: 0
-        };
-    },
-    methods: {
-        goToTop() {
-            // window.scrollTo(0,0);
-            $("html, body").animate({scrollTop: 0}, 400);
-        },
-        openCouponModal() {
-            $("#promoModal").modal('show');
-        }
-    },
-    created() {
-
-    },
-    mounted(){
-        $(window).bind('scroll resize', function() {
-            var $this = $(this);
-            var $this_Top = $this.scrollTop();
-            if ($this_Top > 150) {
-                $(".top").addClass("top_show");
-                $(".coupon").addClass("top_show");            
-            } else {
-                $(".top").removeClass("top_show");
-                $(".coupon").removeClass("top_show");
-            }
-        }).scroll();
-        // $('.carousel').carousel();
-        // 动态设置内容高度 让footer始终居底   header+footer的高度是190
-        this.Height = document.documentElement.clientHeight - 300;  
-        // 监听浏览器窗口变化　
-        window.onresize = ()=> { this.Height = document.documentElement.clientHeight - 300 };
+    CouponModal,
+    Alert
+  },
+  data () {
+    return {
+      Height: 0
     }
+  },
+  methods: {
+    goToTop () {
+      // window.scrollTo(0,0);
+      $('html, body').animate({ scrollTop: 0 }, 400)
+    },
+    openCouponModal () {
+      $('#promoModal').modal('show')
+    }
+  },
+  created () {
+
+  },
+  mounted () {
+    $(window).bind('scroll resize', function () {
+      var $this = $(this)
+      var $this_Top = $this.scrollTop()
+      if ($this_Top > 150) {
+        $('.top').addClass('top_show')
+        $('.coupon').addClass('top_show')
+      } else {
+        $('.top').removeClass('top_show')
+        $('.coupon').removeClass('top_show')
+      }
+    }).scroll()
+    // $('.carousel').carousel();
+    // 动态设置内容高度 让footer始终居底   header+footer的高度是190
+    this.Height = document.documentElement.clientHeight - 300
+    // 监听浏览器窗口变化
+    window.onresize = () => { this.Height = document.documentElement.clientHeight - 300 }
+  }
 }
 </script>
-
 
 <style scoped src="../assets/css/index.css">
 

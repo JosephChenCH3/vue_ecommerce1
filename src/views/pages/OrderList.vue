@@ -36,7 +36,7 @@
             </tbody>
         </table>
 		<Pagecomponent :content="pagenation" @getPagenationOut="getOrderList"></Pagecomponent>
-		<div class="modal fade" id="orderListModal" tabindex="-1" role="dialog" 
+		<div class="modal fade" id="orderListModal" tabindex="-1" role="dialog"
         		aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content border-0">
@@ -48,7 +48,7 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div class="modal-body">               
+                    <div class="modal-body">
                         <h6 class="text-primary">訂單明細</h6>
                         <div>訂單編號：{{ editOrderList.id }} </div>
                         <div>訂單日期：{{ (new Date(editOrderList.create_at * 1000)).toLocaleDateString('zh-TW') }}
@@ -61,7 +61,7 @@
                                 <input class="custom-control-input align-middle" type="checkbox" id="is_process" :true-value="true" :false-value="false" v-model="editOrderList.is_process">
                                 <label class="custom-control-label" for="is_process"></label>
                             </div>
-                        </div> 
+                        </div>
                         <hr>
                         <h6 class="text-primary">購買明細</h6>
                         <div class="container">
@@ -108,7 +108,7 @@
                                 <input class="custom-control-input align-middle" type="checkbox" id="is_paid" :true-value="true" :false-value="false" v-model="editOrderList.is_paid" @change="changePaid">
                                 <label class="custom-control-label" for="is_paid"></label>
                             </div>
-                        </div>                       
+                        </div>
                         <hr>
                         <h6 class="text-primary">訂購人明細</h6>
                         <div>{{ editOrderList.user.address }}</div>
@@ -132,93 +132,93 @@ import $ from 'jquery' // Import js file
 import Pagecomponent from '@/components/PageComponent'
 
 export default {
-	components: {
+  components: {
     	Pagecomponent
-    },
-	data() {
-		return {
-			orderList: [],
-			pagenation: {},
-			isLoading: false,
-			editOrderList: {
-				create_at: "",
-			    is_paid: "",
-                is_process: "",
-			    message: "",
-			    payment_method: "",
-                paid_date: "",
+  },
+  data () {
+    return {
+      orderList: [],
+      pagenation: {},
+      isLoading: false,
+      editOrderList: {
+        create_at: '',
+			    is_paid: '',
+        is_process: '',
+			    message: '',
+			    payment_method: '',
+        paid_date: '',
 			    products: [],
-			    total: "",
-			    user:{
-			    	address: "",
-					email: "",
-					name: "",
-					tel: ""
+			    total: '',
+			    user: {
+			    	address: '',
+          email: '',
+          name: '',
+          tel: ''
 			    }
-			},
-            status: {
-                loading: ""
-            },
-            checkPaidDate: "",
-            paidStatus: false,
-		}
-	},
-	methods: {
-        getOrderList(page = 1) {
-            const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/admin/orders?page=${page}`;
-            const vm = this;
-            vm.isLoading = true;
-            this.$http.get(api).then((response) => {
-                console.log(response.data);
-                vm.isLoading = false;
-                vm.orderList = response.data.orders;
-                vm.pagenation = response.data.pagination;
-            });
-        },
-        openOrderListModal(item) {
-        	this.status.loading = "orderListLoading";
-            const array = this.orderList.filter(function(element) {
+      },
+      status: {
+        loading: ''
+      },
+      checkPaidDate: '',
+      paidStatus: false
+    }
+  },
+  methods: {
+    getOrderList (page = 1) {
+      const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/admin/orders?page=${page}`
+      const vm = this
+      vm.isLoading = true
+      this.$http.get(api).then((response) => {
+        console.log(response.data)
+        vm.isLoading = false
+        vm.orderList = response.data.orders
+        vm.pagenation = response.data.pagination
+      })
+    },
+    openOrderListModal (item) {
+        	this.status.loading = 'orderListLoading'
+      const array = this.orderList.filter(function (element) {
   				if (item.id === element.id) {
-  					return element;
+  					return element
   				}
-			});
-			this.editOrderList = array[0];
-            console.log("openOrderList", this.editOrderList);
-            this.checkPaidDate = this.editOrderList.paid_date;            
-            this.status.loading = "";
-        	$("#orderListModal").modal('show');
-        },
-        changePaid() {
-            this.paidStatus = !this.paidStatus;
-            console.log(this.paidStatus);
-            if( this.paidStatus ) {
-                if( !this.editOrderList.is_paid ) {
-                        this.editOrderList.paid_date = "";  
-                    } else {
-                        this.editOrderList.paid_date = Date.parse(new Date())/1000;
-                    }
-                } else {
-                    this.editOrderList.paid_date = this.checkPaidDate;
-                }
-        },
-        resetPaidStatus() {
-            this.paidStatus = false;
-            this.getOrderList(this.pagenation.current_page);
-        },
-        updateOrderList() {
-        	const id = this.editOrderList.id;
-        	const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/admin/order/${id}`;
-            const vm = this;
-            this.$http.put(api, {data: vm.editOrderList}).then((response) => {
-                console.log("updateOrderList", response.data);
-                $("#orderListModal").modal('hide');
-                this.getOrderList(vm.pagenation.current_page);
-            });
+      })
+      this.editOrderList = array[0]
+      console.log('openOrderList', this.editOrderList)
+      this.checkPaidDate = this.editOrderList.paid_date
+      this.status.loading = ''
+        	$('#orderListModal').modal('show')
+    },
+    changePaid () {
+      this.paidStatus = !this.paidStatus
+      console.log(this.paidStatus)
+      if (this.paidStatus) {
+        if (!this.editOrderList.is_paid) {
+          this.editOrderList.paid_date = ''
+        } else {
+          this.editOrderList.paid_date = Date.parse(new Date()) / 1000
         }
-	},
-	created() {
-		this.getOrderList();
-	}
+      } else {
+        this.editOrderList.paid_date = this.checkPaidDate
+      }
+    },
+    resetPaidStatus () {
+      this.paidStatus = false
+      this.getOrderList(this.pagenation.current_page)
+    },
+    updateOrderList () {
+        	const id = this.editOrderList.id
+        	const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/admin/order/${id}`
+      const vm = this
+      this.$http.put(api, { data: vm.editOrderList }).then((response) => {
+        console.log('updateOrderList', response.data)
+        $('#orderListModal').modal('hide')
+        this.getOrderList(vm.pagenation.current_page)
+      })
+    }
+  },
+  created () {
+    this.getOrderList()
+  }
 }
 
 </script>

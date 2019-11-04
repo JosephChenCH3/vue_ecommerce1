@@ -2,7 +2,7 @@
     <div>
     	<loading :active.sync="isLoading"></loading>
         <div class="row">
-            <div class="col-md-8 col-sm-12" style="height: 910px; background-size: cover; background-position: center" 
+            <div class="col-md-8 col-sm-12" style="height: 910px; background-size: cover; background-position: center"
                 :style="{ backgroundImage: `url(${ product.imageUrl })` }">
             </div>
             <div class="col-md-4 col-sm-12 ml-auto">
@@ -57,89 +57,88 @@
                     <p class="text-light600">※因拍攝燈光效果可能造成色差，請以實品顏色為準。</p>
                 </div>
             </div>
-        </div>      
+        </div>
     </div>
 </template>
 
-
 <script>
 export default {
-    data () {
-        return {
-        	productId: "",
-            product: {
-                stock: "",
-            },
-            quantity: 1,
-            isLoading: false,
-            status: {
-                loading: false,
-                cartId: ""
-            },
-            cartArrayToLS: [],
-        }
-    },
-    methods: {
-        getProduct () {
-            const id = this.productId;
-            const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/product/${id}`;
-            const vm = this;
-            vm.isLoading = true;
-            this.$http.get(api).then((response) => {
-                console.log("getProduct", response.data);
-                vm.isLoading = false;
-                vm.product =  response.data.product;
-            });
-        },
-        addCartToLS (item, qty = 1) {
-            const vm = this;
-            vm.status.cartId = item.id;
-            if (localStorage.getItem("Cart")) {
-                vm.cartArrayToLS = JSON.parse(localStorage.getItem('Cart'));
-            }
-            let hadProduct = true;
-            const timestamp = Math.floor(Date.now());
-            const cart = {
-                product: item ,
-                qty,
-                timestamp,
-            };
-            vm.cartArrayToLS.filter( (element)=> {
-                console.log("element", element, "element.id", element.product.id, "item", item.id);
-                if(element.product.id == item.id) {
-                    return hadProduct = false;
-                }
-            }); 
-            console.log("hadProduct", hadProduct);   
-            if ( hadProduct) {
-                vm.cartArrayToLS.push(cart);
-                localStorage.setItem("Cart", JSON.stringify(vm.cartArrayToLS));
-                vm.$bus.$emit('getCartLS:push');
-                vm.$bus.$emit('cartStatus:push', 1);//讓Search Input判斷是否位移
-                vm.$bus.$emit('message:push', `已加入購物車`, 'success');
-                hadProduct = false;
-                vm.status.cartId = "";
-            } else {
-                vm.$bus.$emit('message:push', `購物車內已有此商品`, 'warning');
-                vm.status.cartId = "";
-            }
-        },
-        badgeSearch (e) {
-            let str = e.target.firstChild.nodeValue;
-            this.$router.push(`/search/${str}`);
-        },
-        goBack (item) {
-            this.status.cartId = item.id;
-            this.$router.go(-1);
-            this.status.cartId = "";
-        }
-    },
-    created () {
-    	this.productId = this.$route.params.productId;
-        this.getProduct();
-    },
-    beforeCreate () {
-        console.log("beforeCreate",this.$route.params.productCategory);
+  data () {
+    return {
+        	productId: '',
+      product: {
+        stock: ''
+      },
+      quantity: 1,
+      isLoading: false,
+      status: {
+        loading: false,
+        cartId: ''
+      },
+      cartArrayToLS: []
     }
+  },
+  methods: {
+    getProduct () {
+      const id = this.productId
+      const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/product/${id}`
+      const vm = this
+      vm.isLoading = true
+      this.$http.get(api).then((response) => {
+        console.log('getProduct', response.data)
+        vm.isLoading = false
+        vm.product = response.data.product
+      })
+    },
+    addCartToLS (item, qty = 1) {
+      const vm = this
+      vm.status.cartId = item.id
+      if (localStorage.getItem('Cart')) {
+        vm.cartArrayToLS = JSON.parse(localStorage.getItem('Cart'))
+      }
+      let hadProduct = true
+      const timestamp = Math.floor(Date.now())
+      const cart = {
+        product: item,
+        qty,
+        timestamp
+      }
+      vm.cartArrayToLS.filter((element) => {
+        console.log('element', element, 'element.id', element.product.id, 'item', item.id)
+        if (element.product.id == item.id) {
+          return hadProduct = false
+        }
+      })
+      console.log('hadProduct', hadProduct)
+      if (hadProduct) {
+        vm.cartArrayToLS.push(cart)
+        localStorage.setItem('Cart', JSON.stringify(vm.cartArrayToLS))
+        vm.$bus.$emit('getCartLS:push')
+        vm.$bus.$emit('cartStatus:push', 1)// 讓Search Input判斷是否位移
+        vm.$bus.$emit('message:push', `已加入購物車`, 'success')
+        hadProduct = false
+        vm.status.cartId = ''
+      } else {
+        vm.$bus.$emit('message:push', `購物車內已有此商品`, 'warning')
+        vm.status.cartId = ''
+      }
+    },
+    badgeSearch (e) {
+      let str = e.target.firstChild.nodeValue
+      this.$router.push(`/search/${str}`)
+    },
+    goBack (item) {
+      this.status.cartId = item.id
+      this.$router.go(-1)
+      this.status.cartId = ''
+    }
+  },
+  created () {
+    	this.productId = this.$route.params.productId
+    this.getProduct()
+  },
+  beforeCreate () {
+    console.log('beforeCreate', this.$route.params.productCategory)
+  }
 }
 </script>

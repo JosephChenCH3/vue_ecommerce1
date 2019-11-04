@@ -1,6 +1,6 @@
 <template>
     <nav aria-label="Page navigation example">
-        <ul class="pagination">     
+        <ul class="pagination">
             <li class="page-item" :class="{'disabled': !content.has_pre }"
                 @click="getProducts(1)">
                 <a class="page-link" href="#" aria-label="Previous">
@@ -10,9 +10,9 @@
             <li class="page-item" :class="{'disabled': !content.has_pre }"
                 @click="getProducts(content.current_page - 1)">
                 <a class="page-link" href="#" aria-label="Previous">
-                   <i class="fas fa-angle-left"></i> 
+                   <i class="fas fa-angle-left"></i>
                 </a>
-            </li> 
+            </li>
             <li class="page-item" :class="{'active': content.current_page == page }" v-for="page in content.total_pages"
                 @click="getProducts(page)" v-if="(page < content.current_page + 3) && (page > content.current_page - 3)">
                 <a class="page-link" href="#">{{page}}</a>
@@ -33,19 +33,18 @@
     </nav>
 </template>
 
-
 <script>
-    export default {
-        props:['content'],
-        data() {
-            return {
-                // counter: this.content
-            }
-        },
-        methods: {
-            getProducts(item) {
-                this.$emit("getPagenationOut", item);
-            }
-        }
+export default {
+  props: ['content'],
+  data () {
+    return {
+      // counter: this.content
     }
+  },
+  methods: {
+    getProducts (item) {
+      this.$emit('getPagenationOut', item)
+    }
+  }
+}
 </script>

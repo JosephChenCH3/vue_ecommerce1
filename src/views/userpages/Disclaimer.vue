@@ -21,22 +21,20 @@
 </template>
 <script>
 
-
 export default {
-    components: {
+  components: {
 
-    },
-    data() {
-        return {
-
-        };
-    },
-    created() {
+  },
+  data () {
+    return {
 
     }
+  },
+  created () {
+
+  }
 }
 </script>
 <style scoped>
-
 
 </style>

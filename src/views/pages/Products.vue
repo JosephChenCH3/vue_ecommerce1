@@ -40,9 +40,9 @@
                 </tr>
             </tbody>
         </table>
-		<Pagecomponent :content="pagenation" @getPagenationOut="getProducts"></Pagecomponent>      
+		<Pagecomponent :content="pagenation" @getPagenationOut="getProducts"></Pagecomponent>
         <!-- Modal -->
-        <div class="modal fade" id="productModal" tabindex="-1" role="dialog" 
+        <div class="modal fade" id="productModal" tabindex="-1" role="dialog"
         		aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content border-0">
@@ -102,17 +102,17 @@
                                     <div class="form-group col-md-6">
                                         <label for="price">售價</label>
                                         <input type="number" class="form-control" id="price" placeholder="請輸入售價" v-model="tempProduct.price">
-                                    </div>    
+                                    </div>
                                 </div>
                                 <div class="form-row">
                                     <div class="form-group col-md-6">
                                         <label for="series">小分類</label>
                                         <input type="text" class="form-control" id="series" placeholder="請輸入分類" v-model="tempProduct.series">
-                                    </div> 
+                                    </div>
                                     <div class="form-group col-md-6">
                                         <label for="stock">庫存</label>
                                         <input type="number" class="form-control" id="stock" placeholder="請輸入進貨量" v-model="tempProduct.stock">
-                                    </div> 
+                                    </div>
                                 </div>
                                 <hr>
                                 <div class="form-group">
@@ -131,7 +131,7 @@
                                             <input class="custom-control-input align-middle" type="checkbox" id="is_enabled" :true-value="1" :false-value="0" v-model="tempProduct.is_enabled">
                                             <label class="custom-control-label" for="is_enabled"></label>
                                         </div>
-                                    </div> 
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -168,128 +168,127 @@
     </div>
 </template>
 
-
 <script>
 import $ from 'jquery' // Import js file
 import Pagecomponent from '@/components/PageComponent'
 
 export default {
-    components: {
+  components: {
     	Pagecomponent
-    },
-    data() {
-        return {
-            products: [],
-            tempProduct: {},
-            pagenation: {},
-            isNew: false,
-            delId: "",
-            isLoading: false,
-            status: {
-                fileUploading: false,
-            }
-        };
-    },
-    methods: {
-        getProducts(page = 1) {
-            const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/admin/products?page=${page}`;
-            const vm = this;
-            // console.log(process.env.VUE_APP_APIPATH, process.env.VUE_APP_CUSTOMPATH);
-            vm.isLoading = true;
-            this.$http.get(api).then((response) => {
-                console.log("getProducts", response.data);
-                vm.isLoading = false;
-                vm.products = response.data.products;
-                vm.pagenation = response.data.pagination;
-            });
-        },
-        openModal(isNew, item) {
-            if (isNew) {
-                this.tempProduct = {};
-                this.isNew = true;
-            } else {
-                this.tempProduct = Object.assign({}, item);
-                this.isNew = false;
-            }
-            $("#productModal").modal('show');
-        },
-        updateProduct() {
-            let api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/admin/product`;
-            let httpMethod = "post";
-            const vm = this;
-            if (!vm.isNew) {
-                api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/admin/product/${vm.tempProduct.id}`;
-                httpMethod = "put";
-            }
-            this.$http[httpMethod](api, { data: vm.tempProduct }).then((response) => {
-                if (response.data.success) {
-                    $("#productModal").modal('hide');
-                    // vm.getProducts(vm.pagenation.current_page);
-                } else {
-                    console.log("新增失敗");
-                    $("#productModal").modal('hide');
-                    // vm.getProducts(vm.pagenation.current_page);
-                }
-                vm.getProducts(vm.pagenation.current_page);
-            });
-            vm.clearUploadFileInput();
-        },
-        openDelModal(item) {
-            this.tempProduct = Object.assign({}, item);
-            this.delId = item.id;
-            $("#delProductModal").modal('show');
-        },
-        delProduct() {
-            const vm = this;
-            const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/admin/product/${vm.delId}`;
-            this.$http.delete(api).then((response) => {
-                if (response.data.success) {
-                    vm.$bus.$emit('message:push', response.data.message, 'success');
-                    $("#delProductModal").modal('hide');
-                    // vm.getProducts(vm.pagenation.current_page);
-                    // vm.delId = "";
-                } else {
-                    console.log("找不到該產品");
-                    vm.$bus.$emit('message:push', response.data.message, 'danger');
-                    $("#delProductModal").modal('hide');
-                    // vm.getProducts(vm.pagenation.current_page);
-                    // vm.delId = "";
-                }
-                vm.getProducts(vm.pagenation.current_page);
-                vm.delId = "";
-            });
-        },
-        uploadFile() {
-            console.log(this);
-            const vm = this;
-            const uploadedFile = this.$refs.files.files[0];
-            const formData = new FormData();
-            formData.append("file-to-upload", uploadedFile);
-            vm.status.fileUploading = true;
-            const url = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/admin/upload`;
-            this.$http.post(url, formData, {
-                headers: {
-                    "Content-type": "multipart/form-data"
-                }
-            }).then((response) => {
-                console.log("uploadFile", response.data);
-                vm.status.fileUploading = false;
-                if (response.data.success) {
-                    // vm.tempProduct.imageUrl = response.data.imageUrl;//此二行無效,imageUrl未雙向綁定
-                    // console.log(vm.tempProduct);//此二行無效,imageUrl未雙向綁定
-                    vm.$set(vm.tempProduct, "imageUrl", response.data.imageUrl);
-                } else {
-                    vm.$bus.$emit('message:push', response.data.message, 'danger');
-                }
-            });
-        },
-        clearUploadFileInput() {
-            const xCustomFile = document.getElementById("customFile");
-            xCustomFile.value = "";
-        }
-    },
-    created() {
-        this.getProducts();
+  },
+  data () {
+    return {
+      products: [],
+      tempProduct: {},
+      pagenation: {},
+      isNew: false,
+      delId: '',
+      isLoading: false,
+      status: {
+        fileUploading: false
+      }
     }
+  },
+  methods: {
+    getProducts (page = 1) {
+      const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/admin/products?page=${page}`
+      const vm = this
+      // console.log(process.env.VUE_APP_APIPATH, process.env.VUE_APP_CUSTOMPATH);
+      vm.isLoading = true
+      this.$http.get(api).then((response) => {
+        console.log('getProducts', response.data)
+        vm.isLoading = false
+        vm.products = response.data.products
+        vm.pagenation = response.data.pagination
+      })
+    },
+    openModal (isNew, item) {
+      if (isNew) {
+        this.tempProduct = {}
+        this.isNew = true
+      } else {
+        this.tempProduct = Object.assign({}, item)
+        this.isNew = false
+      }
+      $('#productModal').modal('show')
+    },
+    updateProduct () {
+      let api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/admin/product`
+      let httpMethod = 'post'
+      const vm = this
+      if (!vm.isNew) {
+        api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/admin/product/${vm.tempProduct.id}`
+        httpMethod = 'put'
+      }
+      this.$http[httpMethod](api, { data: vm.tempProduct }).then((response) => {
+        if (response.data.success) {
+          $('#productModal').modal('hide')
+          // vm.getProducts(vm.pagenation.current_page);
+        } else {
+          console.log('新增失敗')
+          $('#productModal').modal('hide')
+          // vm.getProducts(vm.pagenation.current_page);
+        }
+        vm.getProducts(vm.pagenation.current_page)
+      })
+      vm.clearUploadFileInput()
+    },
+    openDelModal (item) {
+      this.tempProduct = Object.assign({}, item)
+      this.delId = item.id
+      $('#delProductModal').modal('show')
+    },
+    delProduct () {
+      const vm = this
+      const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/admin/product/${vm.delId}`
+      this.$http.delete(api).then((response) => {
+        if (response.data.success) {
+          vm.$bus.$emit('message:push', response.data.message, 'success')
+          $('#delProductModal').modal('hide')
+          // vm.getProducts(vm.pagenation.current_page);
+          // vm.delId = "";
+        } else {
+          console.log('找不到該產品')
+          vm.$bus.$emit('message:push', response.data.message, 'danger')
+          $('#delProductModal').modal('hide')
+          // vm.getProducts(vm.pagenation.current_page);
+          // vm.delId = "";
+        }
+        vm.getProducts(vm.pagenation.current_page)
+        vm.delId = ''
+      })
+    },
+    uploadFile () {
+      console.log(this)
+      const vm = this
+      const uploadedFile = this.$refs.files.files[0]
+      const formData = new FormData()
+      formData.append('file-to-upload', uploadedFile)
+      vm.status.fileUploading = true
+      const url = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/admin/upload`
+      this.$http.post(url, formData, {
+        headers: {
+          'Content-type': 'multipart/form-data'
+        }
+      }).then((response) => {
+        console.log('uploadFile', response.data)
+        vm.status.fileUploading = false
+        if (response.data.success) {
+          // vm.tempProduct.imageUrl = response.data.imageUrl;//此二行無效,imageUrl未雙向綁定
+          // console.log(vm.tempProduct);//此二行無效,imageUrl未雙向綁定
+          vm.$set(vm.tempProduct, 'imageUrl', response.data.imageUrl)
+        } else {
+          vm.$bus.$emit('message:push', response.data.message, 'danger')
+        }
+      })
+    },
+    clearUploadFileInput () {
+      const xCustomFile = document.getElementById('customFile')
+      xCustomFile.value = ''
+    }
+  },
+  created () {
+    this.getProducts()
+  }
 }
 </script>
