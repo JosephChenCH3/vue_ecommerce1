@@ -3,11 +3,11 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 import Loading from 'vue-loading-overlay'// Import stylesheet
 // ---vee-validate---
-import { extend } from 'vee-validate'
-import { localize } from 'vee-validate'
+import { extend, localize } from 'vee-validate'
+// import { localize } from 'vee-validate'
 import { required, email } from 'vee-validate/dist/rules'
 
-import zh_TW from 'vee-validate/dist/locale/zh_TW.json'
+import zhTW from 'vee-validate/dist/locale/zh_TW.json'
 // ---vee-validate---
 
 import 'bootstrap' // Import js file
@@ -42,7 +42,7 @@ extend('email', email)
 // });
 localize({
   en: {
-    messages: zh_TW.messages
+    messages: zhTW.messages
   }
 })
 
@@ -70,6 +70,6 @@ router.beforeEach((to, from, next) => {
       }
     })
   } else {
-    	next()
+    next()
   }
 })

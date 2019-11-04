@@ -1,6 +1,6 @@
 <template>
     <div>
-        <footer class="page-footer font-small bg-lativbg pt-3 mt-5">
+        <footer class="page-footer font-small lativbg pt-3 mt-5">
             <div class="container ">
 <!--                 <div class="row">
                     <div class="col-md-5 my-3 text-white ml-auto mr-auto text-center">
@@ -32,8 +32,8 @@
                 <span class="px-2">|</span>
                 <router-link class="foot-item d-inline" to="/page/disclaimer">免責聲明</router-link>
             </div>
-            <div class="footer-copyright text-center text-light800 mt-3">© 2019 Copyright</div>
-            <div class="footer-copyright text-center text-light800 pb-3">
+            <div class="footer-copyright text-center light600 mt-3">© 2019 Copyright</div>
+            <div class="footer-copyright text-center light600 pb-3">
                 本站為單純的作品練習，資料、圖片來源皆出各衣飾網站，不使用於任何商業或營利行為
             </div>
         </footer>

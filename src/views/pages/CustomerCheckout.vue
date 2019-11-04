@@ -1,6 +1,6 @@
 <template>
     <div>
-    	<loading :active.sync="isLoading"></loading>
+      <loading :active.sync="isLoading"></loading>
         <div class="my-5 row justify-content-center">
             <form class="col-md-6" @submit.prevent="payOrder">
                 <table class="table">
@@ -52,8 +52,8 @@
                 </table>
                 <div class="text-right" v-if="order.is_paid === false">
                     <button class="btn btn-danger">
-                    	<i class="fas fa-spinner fa-pulse" v-if="status.loading == 'orderLoading'"></i>
-                	    確認付款去
+                      <i class="fas fa-spinner fa-pulse" v-if="status.loading == 'orderLoading'"></i>
+                      確認付款去
                 </button>
                 </div>
             </form>
@@ -65,20 +65,20 @@
 export default {
   data () {
     return {
-        	orderId: '',
-        	order: {
-        		user: {},
-        		is_paid: ''
-        	},
-        	status: {
-            	loading: ''
-        	}
+      orderId: '',
+      order: {
+        user: {},
+        is_paid: ''
+      },
+      status: {
+        loading: ''
+      }
     }
   },
   methods: {
     getOrder () {
-        	const vm = this
-        	const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/order/${vm.orderId}`
+      const vm = this
+      const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/order/${vm.orderId}`
       vm.isLoading = true
       this.$http.get(api).then((response) => {
         console.log('getOrder', response.data)
@@ -87,16 +87,16 @@ export default {
       })
     },
     payOrder () {
-        	const vm = this
-        	const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/pay/${vm.orderId}`
+      const vm = this
+      const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/pay/${vm.orderId}`
       vm.status.loading = 'orderLoading'
       this.$http.post(api).then((response) => {
         console.log('getOrder', response.data)
         if (response.data.success) {
-                	vm.order.is_paid = response.data.is_paid
-                	vm.$bus.$emit('message:push', response.data.message, 'success')
+          vm.order.is_paid = response.data.is_paid
+          vm.$bus.$emit('message:push', response.data.message, 'success')
         } else {
-                	vm.$bus.$emit('message:push', response.data.message, 'danger')
+          vm.$bus.$emit('message:push', response.data.message, 'danger')
         }
         vm.getOrder()
         vm.status.loading = ''
@@ -104,8 +104,8 @@ export default {
     }
   },
   created () {
-    	this.orderId = this.$route.params.orderId
-    	this.getOrder()
+    this.orderId = this.$route.params.orderId
+    this.getOrder()
   }
 }
 </script>

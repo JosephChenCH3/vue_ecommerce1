@@ -1,163 +1,155 @@
 <template>
-    <div>
-        <loading :active.sync="isLoading"></loading>
-        <div class="my-5 container col-lg-6" v-if="carts.total == 0">
-            <div class="h5 text-danger">購物清單中無任何商品</div>
-            <router-link to="/">返回首頁</router-link>
-        </div>
-        <div class="my-5 container col-lg-6" v-if="carts.total != 0">
-            <div class="card border-0 shadow-sm">
-                <div class="pt-3" style="height: 25px; background-size: cover; background-position: center">
-                    <h5 class="text-dark text-center">購物清單</h5>
-                </div>
-                <div class="card-body">
-                    <table class="table">
-                        <thead>
-                            <td>品名</td>
-                            <td width="70">數量</td>
-                            <td width="80">單價</td>
-                            <td width="80">小計</td>
-                            <td width="50"></td>
-                        </thead>
-                        <tbody>
-                            <tr v-for="item in carts.carts" :key="item.id">
-                                <td class="align-middle">
-                                    {{ item.product.title }}
-                                    <div class="text-success" v-if="item.coupon">已套用優惠券</div>
-                                </td>
-                                <td class="align-middle">{{ item.qty }} / 件</td>
-                                <td class="align-middle">{{ item.product.price | currency }}</td>
-                                <td class="align-middle">{{ item.product.price * item.qty | currency }}</td>
-                                <td class="align-middle">
-                                    <button @click.prevent="removeCartItem(item)" class="btn btn-outline-danger">
-                                        <i v-if="status.itemId !== item.id" class="far fa-trash-alt"></i>
-                                        <i v-if="status.itemId === item.id" class="fas fa-spinner fa-pulse"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr class="text-primary text-right">
-                                <td colspan="4" class="align-middle">
-                                    <h5>總計：{{ carts.total | currency }}元</h5>
-                                </td>
-                            </tr>
-                            <tr class="text-success text-right" v-if="carts.total !== carts.final_total">
-                                <td colspan="4" class="align-middle">
-                                    <h5>折扣價：{{ carts.final_total | currency }}元</h5>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                <div class="form-group">
-                    <div class="row col-12  align-middle">
-                        <div class="align-middle" style="line-height: 24px">使用優惠代碼：</div>
-                        <div class="custom-control custom-switch">
-                            <input class="custom-control-input align-middle" type="checkbox" id="is_enabled" :true-value="1" :false-value="0" v-model="coupon_is_enabled">
-                            <label class="custom-control-label" for="is_enabled"></label>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="input-group mb-3 col-12" v-if="coupon_is_enabled">
-                    <input type="text" class="form-control" placeholder="請輸入優惠代碼" aria-label="" aria-describedby="button-addon2" v-model="coupon">
-                    <div class="input-group-append">
-                        <button class="btn btn-outline-secondary" type="button" id="button-addon2" @click.prevent="openModalGetCouponCode">
-                            <i class="fas fa-spinner fa-pulse" v-if="status.loading == 'couponLoading'"></i>
-                            套用
-                        </button>
-                    </div>
-                </div>
-                </div>
-            </div>
-        </div>
-        <div class="my-5 container col-lg-6" v-if="carts.total != 0">
-            <div class="card border-0 shadow-sm bg-light">
-                <div class="pt-3" style="height: 25px; background-size: cover; background-position: center">
-                    <h5 class="text-dark text-center">訂購人資訊</h5>
-                </div>
-
-                <!-- vee-validate -->
-                <ValidationObserver ref="observer">
-                <!-- vee-validate -->
-
-                <form class="mt-5 pb-3 col-md-12" @submit.prevent="creatOrder">
-
-                    <!-- vee-validate -->
-                    <ValidationProvider name="email" rules="required|email">
-                        <div slot-scope="{ errors }">
-                            <label for="useremail">Email</label>
-                            <input type="email" class="form-control" v-model="form.user.email" id="useremail" placeholder="請輸入Email">
-                            <p class="text-danger">{{ errors[0] }}</p>
-                        </div>
-                    </ValidationProvider>
-                    <ValidationProvider name="收件人姓名" rules="required">
-                        <div slot-scope="{ errors }">
-                            <label for="username">收件人姓名</label>
-                            <input type="text" class="form-control" v-model="form.user.name" id="username" placeholder="請輸入姓名">
-                            <p class="text-danger">{{ errors[0] }}</p>
-                        </div>
-                    </ValidationProvider>
-                    <ValidationProvider name="收件人電話" rules="required">
-                        <div slot-scope="{ errors }">
-                            <label for="usertel">收件人電話</label>
-                            <input type="tel" class="form-control" v-model="form.user.tel" id="usertel" placeholder="請輸入電話">
-                            <p class="text-danger">{{ errors[0] }}</p>
-                        </div>
-                    </ValidationProvider>
-                    <ValidationProvider name="收件人地址" rules="required">
-                        <div slot-scope="{ errors }">
-                            <label for="useraddress">收件人地址</label>
-                            <input type="text" class="form-control" v-model="form.user.address" id="useraddress" placeholder="請輸入地址">
-                            <p class="text-danger">{{ errors[0] }}</p>
-                        </div>
-                    </ValidationProvider>
-                    <!-- vee-validate -->
-
-                    <div class="form-group">
-                        <label for="comment">留言</label>
-                        <textarea name="" id="comment" class="form-control" cols="30" rows="10" v-model="form.message"></textarea>
-                    </div>
-                    <hr>
-
-                    <ValidationProvider name="付款方式" rules="required">
-                        <div slot-scope="{ errors }">
-                            <div>付款方式</div>
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" class="custom-control-input" id="radio1" v-model="form.user.payment_method" value="刷卡">
-                                <label class="custom-control-label align-middle" for="radio1">刷卡</label>
-                            </div>
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" class="custom-control-input" id="radio2" v-model="form.user.payment_method" value="超商取貨">
-                                <label class="custom-control-label align-middle" for="radio2">超商取貨</label>
-                            </div>
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" class="custom-control-input" id="radio3" v-model="form.user.payment_method" value="貨到付款">
-                                <label class="custom-control-label align-middle" for="radio3">貨到付款</label>
-                            </div>
-                            <p class="text-success">您選擇的付款方式： {{form.user.payment_method}} </p>
-                            <p class="text-danger">{{ errors[0] }}</p>
-                        </div>
-                    </ValidationProvider>
-
-                    <div class="text-right">
-                        <button class="btn btn-danger" v-if="status.loading != 'orderLoading'">
-                            送出訂單
-                        </button>
-                        <div v-if="status.loading == 'orderLoading'">
-                            <i class="fas fa-spinner fa-pulse" v-if="status.loading == 'orderLoading'"></i>
-                            訂單傳送中
-                        </div>
-                    </div>
-                </form>
-
-                <!-- vee-validate -->
-                </ValidationObserver>
-                <!-- vee-validate -->
-            </div>
-        </div>
+  <div>
+    <loading :active.sync="isLoading"></loading>
+    <div class="my-5 container col-lg-6" v-if="carts.total == 0">
+      <div class="h5 text-danger">購物清單中無任何商品</div>
+      <router-link to="/">返回首頁</router-link>
     </div>
+    <div class="my-5 container col-lg-6" v-if="carts.total != 0">
+      <div class="card border-0 shadow-sm">
+        <div class="pt-3" style="height: 25px; background-size: cover; background-position: center">
+          <h5 class="text-dark text-center">購物清單</h5>
+        </div>
+        <div class="card-body">
+          <table class="table">
+            <thead>
+              <td>品名</td>
+              <td width="70">數量</td>
+              <td width="80">單價</td>
+              <td width="80">小計</td>
+              <td width="50"></td>
+            </thead>
+            <tbody>
+              <tr v-for="item in carts.carts" :key="item.id">
+                <td class="align-middle">
+                  {{ item.product.title }}
+                  <div class="text-success" v-if="item.coupon">已套用優惠券</div>
+                </td>
+                <td class="align-middle">{{ item.qty }} / 件</td>
+                <td class="align-middle">{{ item.product.price | currency }}</td>
+                <td class="align-middle">{{ item.product.price * item.qty | currency }}</td>
+                <td class="align-middle">
+                  <button @click.prevent="removeCartItem(item)" class="btn btn-outline-danger">
+                    <i v-if="status.itemId !== item.id" class="far fa-trash-alt"></i>
+                    <i v-if="status.itemId === item.id" class="fas fa-spinner fa-pulse"></i>
+                  </button>
+                </td>
+              </tr>
+              <tr class="text-primary text-right">
+                <td colspan="4" class="align-middle">
+                  <h5>總計：{{ carts.total | currency }}元</h5>
+                </td>
+              </tr>
+              <tr class="text-success text-right" v-if="carts.total !== carts.final_total">
+                <td colspan="4" class="align-middle">
+                  <h5>折扣價：{{ carts.final_total | currency }}元</h5>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="form-group">
+            <div class="row col-12  align-middle">
+              <div class="align-middle" style="line-height: 24px">使用優惠代碼：</div>
+              <div class="custom-control custom-switch">
+                <input class="custom-control-input align-middle" type="checkbox" id="is_enabled" :true-value="1" :false-value="0" v-model="coupon_is_enabled">
+                <label class="custom-control-label" for="is_enabled"></label>
+              </div>
+            </div>
+          </div>
+          <div class="input-group mb-3 col-12" v-if="coupon_is_enabled">
+            <input type="text" class="form-control" placeholder="請輸入優惠代碼" aria-label="" aria-describedby="button-addon2" v-model="coupon">
+            <div class="input-group-append">
+              <button class="btn btn-outline-secondary" type="button" id="button-addon2" @click.prevent="addCouponCode">
+                <i class="fas fa-spinner fa-pulse" v-if="status.loading == 'couponLoading'"></i>
+                套用
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="my-5 container col-lg-6" v-if="carts.total != 0">
+      <div class="card border-0 shadow-sm bg-light">
+        <div class="pt-3" style="height: 25px; background-size: cover; background-position: center">
+          <h5 class="text-dark text-center">訂購人資訊</h5>
+        </div>
+        <!-- vee-validate -->
+        <ValidationObserver ref="observer">
+          <!-- vee-validate -->
+          <form class="mt-5 pb-3 col-md-12" @submit.prevent="creatOrder">
+            <!-- vee-validate -->
+            <ValidationProvider name="email" rules="required|email">
+              <div slot-scope="{ errors }">
+                <label for="useremail">Email</label>
+                <input type="email" class="form-control" v-model="form.user.email" id="useremail" placeholder="請輸入Email">
+                <p class="text-danger">{{ errors[0] }}</p>
+              </div>
+            </ValidationProvider>
+            <ValidationProvider name="收件人姓名" rules="required">
+              <div slot-scope="{ errors }">
+                <label for="username">收件人姓名</label>
+                <input type="text" class="form-control" v-model="form.user.name" id="username" placeholder="請輸入姓名">
+                <p class="text-danger">{{ errors[0] }}</p>
+              </div>
+            </ValidationProvider>
+            <ValidationProvider name="收件人電話" rules="required">
+              <div slot-scope="{ errors }">
+                <label for="usertel">收件人電話</label>
+                <input type="tel" class="form-control" v-model="form.user.tel" id="usertel" placeholder="請輸入電話">
+                <p class="text-danger">{{ errors[0] }}</p>
+              </div>
+            </ValidationProvider>
+            <ValidationProvider name="收件人地址" rules="required">
+              <div slot-scope="{ errors }">
+                <label for="useraddress">收件人地址</label>
+                <input type="text" class="form-control" v-model="form.user.address" id="useraddress" placeholder="請輸入地址">
+                <p class="text-danger">{{ errors[0] }}</p>
+              </div>
+            </ValidationProvider>
+            <!-- vee-validate -->
+            <div class="form-group">
+              <label for="comment">留言</label>
+              <textarea name="" id="comment" class="form-control" cols="30" rows="10" v-model="form.message"></textarea>
+            </div>
+            <hr>
+            <ValidationProvider name="付款方式" rules="required">
+              <div slot-scope="{ errors }">
+                <div>付款方式</div>
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input type="radio" class="custom-control-input" id="radio1" v-model="form.user.payment_method" value="刷卡">
+                  <label class="custom-control-label align-middle" for="radio1">刷卡</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input type="radio" class="custom-control-input" id="radio2" v-model="form.user.payment_method" value="超商取貨">
+                  <label class="custom-control-label align-middle" for="radio2">超商取貨</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input type="radio" class="custom-control-input" id="radio3" v-model="form.user.payment_method" value="貨到付款">
+                  <label class="custom-control-label align-middle" for="radio3">貨到付款</label>
+                </div>
+                <p class="text-success">您選擇的付款方式： {{form.user.payment_method}} </p>
+                <p class="text-danger">{{ errors[0] }}</p>
+              </div>
+            </ValidationProvider>
+            <div class="text-right">
+              <button class="btn btn-danger" v-if="status.loading != 'orderLoading'">
+                送出訂單
+              </button>
+              <div v-if="status.loading == 'orderLoading'">
+                <i class="fas fa-spinner fa-pulse" v-if="status.loading == 'orderLoading'"></i>
+                訂單傳送中
+              </div>
+            </div>
+          </form>
+          <!-- vee-validate -->
+        </ValidationObserver>
+        <!-- vee-validate -->
+      </div>
+    </div>
+  </div>
 </template>
 <script>
-import $ from 'jquery' // Import js file
+// import $ from 'jquery' // Import js file
 import { ValidationProvider, ValidationObserver } from 'vee-validate'
 
 export default {
@@ -187,11 +179,10 @@ export default {
         message: '',
         cartArrayToLS: []
       },
-      user:
-            {
-              username: 'joseph.work01@gmail.com',
-              password: 'Jcw0122456'
-            }
+      user: {
+        username: 'joseph.work01@gmail.com',
+        password: 'Jcw0122456'
+      }
     }
   },
   methods: {
@@ -248,6 +239,7 @@ export default {
       this.$http.post(api, { data: coupon }).then((response) => {
         console.log('套用優惠券', response.data)
         if (!response.data.success) {
+          vm.coupon_is_enabled = false
           vm.$bus.$emit('message:push', response.data.message, 'danger')
         } else {
           vm.$bus.$emit('message:push', response.data.message, 'success')
@@ -261,7 +253,7 @@ export default {
       const vm = this
       const orderInfo = vm.form
       vm.status.loading = 'orderLoading'
-      const isValid = await this.$refs.observer.validate()// ---vee-validate---
+      const isValid = await this.$refs.observer.validate() // ---vee-validate---
       if (!isValid) {
         vm.$bus.$emit('message:push', '表單填寫不完整', 'danger')
         vm.status.loading = ''
@@ -270,7 +262,7 @@ export default {
         vm.$http.post(api, { data: orderInfo }).then((response) => {
           console.log('訂單完成', response)
           if (response.data.success) {
-            vm.updateStock()// 更新庫存數量
+            vm.updateStock() // 更新庫存數量
             vm.$router.push(`/order-check/${response.data.orderId}`)
           } else {
             vm.$bus.$emit('message:push', response.data.message, 'danger')
@@ -282,7 +274,7 @@ export default {
     },
     updateStock () {
       const vm = this
-      let count = 0
+      // let count = 0
       let newProduct = []
       const apilg = `${process.env.VUE_APP_APIPATH}/admin/signin`
       vm.isLoading = true
@@ -336,7 +328,7 @@ export default {
 
   },
   beforeRouteLeave (to, from, next) {
-    if (this.carts.total == 0) {
+    if (this.carts.total === 0) {
       next()
     } else if (to.name === 'OrderCheck') {
       next()
@@ -351,4 +343,5 @@ export default {
     }
   }
 }
+
 </script>

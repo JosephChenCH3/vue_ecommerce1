@@ -1,24 +1,24 @@
 <template>
-    <div>
-    	<UserNavbar></UserNavbar>
-        <Alert></Alert>
-        <div class="container">
-            <div style="height: 150px"></div>
-            <div id="v-content" v-bind:style="{minHeight: Height+'px'}">
-                <!-- <router-view :key="$route.path"></router-view> -->
-                <router-view></router-view>
-            </div>
-            <div class="top mousePointer" @click="goToTop">
-                <img width="31" height="49" src="@/assets/icon_top.png" alt=""/>
-            </div>
-            <div class="coupon mousePointer btn_shake" @click="openCouponModal">
-                <img width="100" height="100" src="@/assets/Coupon-High-Quality-PNG.png" alt=""/>
-            </div>
+  <div>
+    <UserNavbar></UserNavbar>
+      <Alert></Alert>
+      <div class="container">
+        <div style="height: 150px"></div>
+        <div id="v-content" v-bind:style="{minHeight: Height+'px'}">
+          <!-- <router-view :key="$route.path"></router-view> -->
+          <router-view></router-view>
         </div>
-        <div class="modal fade" id="promoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <CouponModal></CouponModal>
+        <div class="top mousePointer" @click="goToTop">
+          <img width="31" height="49" src="@/assets/icon_top.png" alt=""/>
         </div>
-		<UserFooter></UserFooter>
+        <div class="coupon mousePointer btn_shake" @click="openCouponModal">
+          <img width="100" height="100" src="@/assets/Coupon-High-Quality-PNG.png" alt=""/>
+        </div>
+      </div>
+    <div class="modal fade" id="promoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <CouponModal></CouponModal>
+    </div>
+    <UserFooter></UserFooter>
     </div>
 </template>
 
@@ -31,8 +31,8 @@ import CouponModal from './CouponModal'
 
 export default {
   components: {
-    	UserNavbar,
-    	UserFooter,
+    UserNavbar,
+    UserFooter,
     CouponModal,
     Alert
   },
@@ -55,9 +55,9 @@ export default {
   },
   mounted () {
     $(window).bind('scroll resize', function () {
-      var $this = $(this)
-      var $this_Top = $this.scrollTop()
-      if ($this_Top > 150) {
+      var vm = $(this)
+      var vmTop = vm.scrollTop()
+      if (vmTop > 150) {
         $('.top').addClass('top_show')
         $('.coupon').addClass('top_show')
       } else {
