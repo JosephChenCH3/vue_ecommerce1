@@ -1,11 +1,15 @@
 .dropdown-search-menu {
     min-width: 100px;
-    right: 0;
+/*    right: 140px;*/
 }
 
 .dropdown-search-item:active {
     color: #212529;
     background-color: #FFF;
+}
+
+.input-width {
+	border-color: #6c757d;
 }
 
 @media (max-width: 1199.98px) {
@@ -23,6 +27,9 @@
 @media (max-width: 575.98px) {
 .input-width {
     width: 120px;
+}
+.dropdown-search-item {
+	padding: 0;
 }
 }
 

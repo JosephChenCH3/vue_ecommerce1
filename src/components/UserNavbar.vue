@@ -37,10 +37,10 @@
             </li>
           </ul>
         </div>
-        <SearchInput class="set-position-si top35"></SearchInput>
-        <CartAndPay class="set-position-cp top35"></CartAndPay>
       </div>
     </nav>
+    <SearchInput class="set-position-si top35"></SearchInput>
+    <CartAndPay class="set-position-cp top35"></CartAndPay>
   </div>
 </template>
 <script>

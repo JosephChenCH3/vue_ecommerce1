@@ -44,6 +44,7 @@
 .set-position-si,.set-position-cp {
     position: fixed;
     transition: all .5s ease-in-out;
+    z-index: 1040;
 }
 
 .set-position-si {

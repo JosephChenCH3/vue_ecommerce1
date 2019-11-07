@@ -1,10 +1,11 @@
 # 頁面特點
 
 - 電子商務網站實作專案
-- 整體風格模仿成衣網站製作而成，貼近實務操作
+- 整體風格模仿成衣電商網站製作而成，貼近實務操作
 - 不使用套件達成infinite scroll效果
 - 中小分類於首次載入頁面時將後端取得之分類資料整理，後端分類更新或變動時不需再次維護前台頁面
 - 完整購物結帳流程、庫存數量管控
+- 自行參考 / 製作Banner
 
 
 購物流程 
@@ -49,7 +50,6 @@
 - 商品搜尋
 - 訂單編號搜尋
 
-
 [後台](https://josephchench3.github.io/vue_ecommerce1/#/login)
 * 需管理員帳密驗證
 * 商品管理頁面
@@ -58,6 +58,7 @@
 
 
 # 技術
+
 * vue cli-3
 * vue-router(SPA)
 * vue Component
@@ -67,6 +68,7 @@
 
 
 # 套件
+
 * vue-axios
 * VeeValidate3
 * vue-loading-overlay
@@ -76,8 +78,12 @@
 
 # 資料來源
 
-- Promo 圖示來源：
-* Google搜尋
+- 圖片素材：
+* [Google圖片](https://www.google.com/)
+* [unsplash](https://unsplash.com/)
+* [picjumbo](https://picjumbo.com/)
+* [pixabay](https://pixabay.com/)
+
 
 - 版型參考、商品圖片、商品資料來源：
 * [Lativ](https://www.lativ.com.tw/)

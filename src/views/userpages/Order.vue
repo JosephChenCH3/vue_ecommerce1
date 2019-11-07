@@ -39,11 +39,13 @@
                 <td colspan="4" class="align-middle">
                   <h5>總計：{{ carts.total | currency }}元</h5>
                 </td>
+                <td></td>
               </tr>
               <tr class="text-success text-right" v-if="carts.total !== carts.final_total">
                 <td colspan="4" class="align-middle">
                   <h5>折扣價：{{ carts.final_total | currency }}元</h5>
                 </td>
+                <td></td>
               </tr>
             </tbody>
           </table>

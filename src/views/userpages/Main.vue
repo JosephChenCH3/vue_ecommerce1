@@ -60,7 +60,7 @@ export default {
     return {
       indexPromoImg: [
         { imgUrl: require('@/assets/home/43536_560_191004_TW01.jpg'), searchValue: 'men' },
-        { imgUrl: require('@/assets/home/43353_560_191015_TW2_chin.jpg'), searchValue: 'sports' },
+        { imgUrl: require('@/assets/home/43353_560_191015_TW2_chin.jpg'), searchValue: '運動外套' },
         { imgUrl: require('@/assets/home/FS680_560_191004_TW_1.jpg'), searchValue: 'package' },
         { imgUrl: require('@/assets/home/43455_560_191003_TW03.jpg'), searchValue: 'women' },
         { imgUrl: require('@/assets/home/43377_560_190814_TW_0_chin.jpg'), searchValue: '純棉條紋' },

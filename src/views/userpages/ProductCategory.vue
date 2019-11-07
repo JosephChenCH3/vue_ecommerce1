@@ -119,9 +119,8 @@ export default {
       document.documentElement.scrollTop = 0
       let array = vm.productsGetCategory.filter((element) => {
         if (element.series === item) {
-          return true// 可能有問題
+          return true
         }
-        // return element.series == item
       })
       vm.products = array
       console.log(vm.products, array, vm.productsGetCategory)
@@ -154,7 +153,7 @@ export default {
       vm.cartArrayToLS.filter((element) => {
         console.log('element', element, 'element.id', element.product.id, 'item', item.id)
         if (element.product.id === item.id) {
-          hadProduct = false// 可能有問題
+          hadProduct = false
           return hadProduct
         }
       })
@@ -181,11 +180,8 @@ export default {
     scrollToLoading () {
       const vm = this
       const scrollTop = $(window).scrollTop()
-      // console.log("scrollTop", scrollTop);
       // const bodyHeight = $('body').height()
-      // console.log("bodyHeight", bodyHeight);
       // const windowHeight = $(window).height()
-      // console.log("windowHeight", windowHeight);
       const height = $('body').height() - $(window).height()
       if ((scrollTop + 100) > height) {
         vm.productsInfiniteScrollCount = vm.productsInfiniteScrollCount + 4
