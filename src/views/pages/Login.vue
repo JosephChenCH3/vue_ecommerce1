@@ -1,24 +1,24 @@
 <template>
-    <div>
-        <loading :active.sync="isLoading"></loading>
-        <Alert></Alert>
-        <form class="form-signin" @submit.prevent="signin">
+  <div>
+    <loading :active.sync="isLoading"></loading>
+    <Alert></Alert>
+    <form class="form-signin" @submit.prevent="signin">
+          <div class="form-label-group">
+            <input type="email" id="inputEmail" class="form-control" v-model="user.username" placeholder="Email address" required autofocus>
+            <label for="inputEmail">Email address</label>
+          </div>
             <div class="form-label-group">
-                <input type="email" id="inputEmail" class="form-control" v-model="user.username" placeholder="Email address" required autofocus>
-                <label for="inputEmail">Email address</label>
+              <input type="password" id="inputPassword" class="form-control" v-model="user.password" placeholder="Password" required>
+              <label for="inputPassword">Password</label>
             </div>
-            <div class="form-label-group">
-                <input type="password" id="inputPassword" class="form-control" v-model="user.password" placeholder="Password" required>
-                <label for="inputPassword">Password</label>
-            </div>
-            <div class="checkbox mb-3">
-                <label>
-                    <input type="checkbox" value="remember-me"> Remember me
-                </label>
-            </div>
-            <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-        </form>
-    </div>
+          <div class="checkbox mb-3">
+            <label>
+              <input type="checkbox" value="remember-me"> Remember me
+            </label>
+          </div>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+    </form>
+  </div>
 </template>
 <script>
 import Alert from '@/components/AlertMessage'
@@ -30,10 +30,10 @@ export default {
   data () {
     return {
       user:
-            {
-              username: '',
-              password: ''
-            },
+        {
+          username: '',
+          password: ''
+        },
       isLoading: false
     }
   },

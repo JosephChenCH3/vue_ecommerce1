@@ -1,29 +1,29 @@
 <template>
-    <div>
-        <div class="btn-group ml-3" v-if="cartsNum != 0">
-            <button type="button" class="btn btn-sm btn-outline-danger dropdown-toggle fix-btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" @click="getCartFromLS">
-                <i v-if="status.loading != 'cart'" class="fas fa-cart-arrow-down"></i>
-                <i v-if="status.loading == 'cart'" class="fas fa-spinner fa-pulse"></i>
-            </button>
-            <div class="dropdown-menu dropdown-menu-right px-2 dropdown-cart-menu" @click.stop="">
-                <div class="dropdown-cart-item px-0 d-flex" v-for="item in cartArrayToLS" :key="item.id">
-                    <div class="d-inline co-pm col">{{ item.product.title }}</div>
-                    <div class="d-inline co-pm col-2 text-right">{{ item.qty }} /件</div>
-                    <div class="d-inline co-pm col-2">{{ item.product.price * item.qty | currency }}</div>
-                    <div class="d-inline co-pm col-1 text-right mousePointer" @click="removeCartItemToSL(item)">
-                        <i v-if="status.itemId !== item.id" class="far fa-trash-alt"></i>
-                        <i v-if="status.itemId === item.id" class="fas fa-spinner fa-pulse"></i>
-                    </div>
-                </div>
-                <div class="dropdown-divider"></div>
-                <div class="dropdown-cart-item h6 text-right" href="#">合計：{{ carts.total | currency }}元</div>
+  <div>
+    <div class="btn-group ml-3" v-if="cartsNum != 0">
+      <button type="button" class="btn btn-sm btn-outline-danger dropdown-toggle fix-btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" @click="getCartFromLS">
+        <i v-if="status.loading != 'cart'" class="fas fa-cart-arrow-down"></i>
+        <i v-if="status.loading == 'cart'" class="fas fa-spinner fa-pulse"></i>
+      </button>
+      <div class="dropdown-menu dropdown-menu-right px-2 dropdown-cart-menu" @click.stop="">
+        <div class="dropdown-cart-item px-0 d-flex" v-for="item in cartArrayToLS" :key="item.id">
+            <div class="d-inline co-pm col">{{ item.product.title }}</div>
+            <div class="d-inline co-pm col-2 text-right">{{ item.qty }} /件</div>
+            <div class="d-inline co-pm col-2">{{ item.product.price * item.qty | currency }}</div>
+            <div class="d-inline co-pm col-1 text-right mousePointer" @click="removeCartItemToSL(item)">
+              <i v-if="status.itemId !== item.id" class="far fa-trash-alt"></i>
+              <i v-if="status.itemId === item.id" class="fas fa-spinner fa-pulse"></i>
             </div>
-            <div class="red-dots" v-if="cartsNum != 0">{{ cartsNum }}</div>
-            <button class="btn btn-sm btn-danger my-sm-0" v-if="cartsNum != 0" type="submit" @click="goToOrder">
-                <i class="fas fa-dollar-sign"></i>結帳
-            </button>
         </div>
+        <div class="dropdown-divider"></div>
+        <div class="dropdown-cart-item h6 text-right" href="#">合計：{{ carts.total | currency }}元</div>
+      </div>
+      <div class="red-dots" v-if="cartsNum != 0">{{ cartsNum }}</div>
+      <button class="btn btn-sm btn-danger my-sm-0" v-if="cartsNum != 0" type="submit" @click="goToOrder">
+        <i class="fas fa-dollar-sign"></i>結帳
+      </button>
     </div>
+  </div>
 </template>
 
 <script>
